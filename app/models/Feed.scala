@@ -10,7 +10,8 @@ case class Feed(
   id:   Pk[Long],
   name: String,
   site: String,
-  url:  String) {
+  url:  String,
+  favicon: Option[String]) {
 
   override def toString() = "Feed#" + id
 }
@@ -26,8 +27,9 @@ object Feed {
     get[Pk[Long]]("feed.id") ~
     get[String]("feed.name") ~
     get[String]("feed.site") ~
-    get[String]("feed.url") map {
-        case id ~ name ~ site ~ url => Feed(id, name, site, url)
+    get[String]("feed.url") ~
+    get[Option[String]]("feed.favicon") map {
+        case id ~ name ~ site ~ url ~ favicon => Feed(id, name, site, url, favicon)
       }
   }
 
