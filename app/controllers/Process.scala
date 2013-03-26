@@ -70,7 +70,7 @@ object Process extends Controller {
         whitelist.addAttributes("param", "name", "value")
         whitelist.addTags("div", "iframe", "object", "param", "embed", "section", "aside")
 
-        val page = Jsoup.connect((item \ "link").text).get();
+        val page = Jsoup.connect((item \ "link").text).get()
         val content = Jsoup.clean(parser.getContent(item, page), whitelist)
 
         Item.createOrUpdate(new Item(NotAssigned, title, url, content, date, feed.id.get))
