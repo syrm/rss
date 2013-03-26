@@ -16,7 +16,12 @@ class Default extends Parser {
     }
 
     val simpleDateFormat = new SimpleDateFormat(dateFormat, Locale.US)
-    Option(new Date(simpleDateFormat.parse(dateRaw).getTime()))
+
+    try {
+      Option(new Date(simpleDateFormat.parse(dateRaw).getTime()))
+    } catch {
+      case e: java.text.ParseException => None
+    }
   }
 
   override def getContent(item: Node, page: Document) = {
