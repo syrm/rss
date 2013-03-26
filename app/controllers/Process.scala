@@ -68,7 +68,7 @@ object Process extends Controller {
         whitelist.addAttributes("iframe", "src")
         whitelist.addAttributes("embed", "type", "src", "allowfullscreen", "allowscriptaccess", "flashvars")
         whitelist.addAttributes("param", "name", "value")
-        whitelist.addTags("div", "iframe", "object", "param", "embed")
+        whitelist.addTags("div", "iframe", "object", "param", "embed", "section", "aside")
 
         val page = Jsoup.connect((item \ "link").text).get();
         val content = Jsoup.clean(parser.getContent(item, page), whitelist)

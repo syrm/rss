@@ -13,6 +13,7 @@ class Clubic extends Default {
     val result = (item \ "link").text.split("/")(3) match {
       case "video"       => parseVideo(item, page)
       case "diaporama"   => parseDiaporama(item, page)
+      case uri if uri.matches("^telecharger-.*") => parseTelecharger(item, page)
       case _             => parseArticle(item, page)
     }
 
@@ -58,6 +59,32 @@ class Clubic extends Default {
     }
 
     slideshow + legend
+  }
+
+
+  def parseTelecharger(item: Node, page: Document) = {
+    val header = page.select("section#software_header").first() match {
+      case content: Element => content.html()
+      case null => ""
+    }
+
+    val avis = page.select("section#avis_redac").first() match {
+      case content: Element => {
+        content.select("div.M6ComponentSocialBar").remove()
+        content.select("div#follow_button").remove()
+
+        content.html()
+      }
+      case null => ""
+    }
+
+    val files = page.select("section#files").first() match {
+      case content: Element => content.html()
+      case null => ""
+    }
+
+    header + avis + files
+
   }
 
 
