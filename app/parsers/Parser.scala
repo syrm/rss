@@ -24,6 +24,7 @@ object Parser {
       case "Ubergizmo"     => new Ubergizmo
       case "WebAppers"     => new WebAppers
       case "Webification"  => new Webification
+      case "NowhereElse"   => new NowhereElse
       case _               => new Default
     }
   }
