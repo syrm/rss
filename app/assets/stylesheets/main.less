@@ -9,6 +9,7 @@
 body {
   background: #f0f1f5;
   padding-top: 65px;
+  color: #666;
 }
 
 @media (max-width: 979px) {
@@ -35,8 +36,6 @@ input[type="text"], input[type="password"], textarea, button {
 }
 
 section {
-  background: white;
-  border: 2px solid #e6eaed;
   margin-bottom: 40px;
 }
 
@@ -46,9 +45,11 @@ ul.items {
 
   li.item {
     line-height: 26px;
-    margin-bottom: 6px;
+    margin-bottom: 30px;
     padding: 2px;
     padding-left: 10px;
+    background: white;
+    border: 2px solid #61637d;
 
     img.icon {
       position: relative;
@@ -71,7 +72,13 @@ ul.items {
     }
 
     .article {
-      display: none;
+      margin-top: 25px;
+
+      img, object, iframe {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+      }
     }
   }
 
@@ -80,33 +87,10 @@ ul.items {
   }
 
   li.item.read {
-    color: #aaa;
+    border: 2px solid #e6eaed;
 
     img.icon {
       -webkit-filter: grayscale(100%);
     }
-  }
-
-  li.item.open {
-    color: white;
-    background: #495458;
-
-    .article {
-      display: block;
-      color: #333;
-      background: white;
-      margin-left: -8px;
-      padding: 20px;
-    }
-  }
-
-  li.item:hover {
-    cursor: pointer;
-    color: white;
-    background: #495458;
-  }
-
-  li.item.open:hover {
-    cursor: default;
   }
 }
