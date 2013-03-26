@@ -25,6 +25,7 @@ object Parser {
       case "WebAppers"     => new WebAppers
       case "Webification"  => new Webification
       case "NowhereElse"   => new NowhereElse
+      case "Vincent Abry"  => new VincentAbry
       case _               => new Default
     }
   }
