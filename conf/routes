@@ -1,0 +1,16 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+GET     /item/:id/read             controllers.ItemController.read(id: Int)
+GET     /process                   controllers.Process.index
+GET     /process/feed/:id          controllers.Process.feed(id: Int)
+GET     /register                  controllers.Auth.register
+POST    /register                  controllers.Auth.create
+GET     /login                     controllers.Auth.login
+POST    /login                     controllers.Auth.authenticate
+GET     /logout                    controllers.Auth.logout
+GET     /                          controllers.Application.index
+
+# Map static resources from the /public folder to the /assets URL path
+GET     /assets/*file               controllers.Assets.at(path="/public", file)

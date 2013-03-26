@@ -1,0 +1,44 @@
+@(form: Form[Option[User]])(implicit request: play.api.mvc.Request[Any], user: Option[User] = None)
+
+@layout.main {
+<div class="container">
+    <div class="row">
+        <div class="span6 offset3">
+            <form action="@routes.Auth.login" method="post" class="register form-horizontal">
+                <fieldset>
+                    <legend>Sign In</legend>
+
+                    <div class="control-group">
+                        <label class="control-label" for="username">Username</label>
+                        <div class="controls">
+                            <input type="text" id="username" name="username" value="@form("username").value" maxlength="20">
+                            @for(error <- form.error("username")) {
+                                <span class="help-block error">@Messages(error.message, error.args: _ *)</span>
+                            }
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="password">Password</label>
+                        <div class="controls">
+                            <input type="password" id="password" name="password" @if(!form.hasErrors) { value="@form("password").value" } maxlength="32">
+                            @for(error <- form.error("password")) {
+                                <span class="help-block error">@Messages(error.message, error.args: _ *)</span>
+                            }
+                        </div>
+                    </div>
+
+                    @form.globalError.map { error =>
+                    <div class="control-group large">
+                        <span class="help-block error">@error.message</span>
+                    </div>
+                    }
+
+                    <div class="control-group large">
+                        <button type="submit" class="btn btn-success">Sign In</button>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+    </div>
+</div>
+}

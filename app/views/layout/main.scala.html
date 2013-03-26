@@ -1,0 +1,49 @@
+@(content: Html)(implicit request: play.api.mvc.Request[Any], user: Option[User] = None)
+<!doctype html>
+<html>
+    <head>
+        <title>Rss</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+        <link rel="stylesheet" media="screen" href="@routes.Assets.at("res/bootstrap/css/bootstrap.css")">
+        <link rel="stylesheet" media="screen" href="@routes.Assets.at("res/Font-Awesome/css/font-awesome.css")">
+        <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/main.css")">
+        <link href="http://fonts.googleapis.com/css?family=Roboto:300,400" media="screen" rel="stylesheet" type="text/css" />
+        <link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")">
+    </head>
+    <body>
+        <div class="navbar navbar-fixed-top">
+            <div class="navbar-inner">
+                <a class="brand" href="@routes.Application.index">Paste</a>
+                <ul class="nav pull-right">
+                @user match {
+                    case Some(user: User) => {
+                        <li><a class="user" href="#"><strong>@user.name</strong></a></li>
+                        <li><a class="logout" href="@routes.Auth.logout"><i class="icon-off"></i></a></li>
+
+                    }
+                    case None => {
+                        <li @if(request.uri == "/register") { class="active" }><a href="@routes.Auth.register"><strong>Register</strong></a></li>
+                        <li @if(request.uri == "/login") { class="active" }><a href="@routes.Auth.login">Login</a></li>
+                    }
+                }
+                </ul>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                @content
+            </div>
+        </div>
+
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js" type="text/javascript"></script>
+        <script type="text/javascript">
+        //<![CDATA[
+         window.jQuery || document.write("<script src=\"@routes.Assets.at("res/jquery-1.9.1.min.js")\" type=\"text/javascript\"><\/script>")
+        //]]>
+        </script>
+        <script src="@routes.Assets.at("res/jquery.scrollTo.js")" type="text/javascript"></script>
+        <script src="@routes.Assets.at("javascripts/main.js")" type="text/javascript"></script>
+    </body>
+</html>
