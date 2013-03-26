@@ -37,7 +37,7 @@ object User {
     get[String]("user.salt") ~
     get[String]("user.permission") ~
     get[Date]("user.date") map {
-      case id~name~email~password~salt~permission~date => User(id, name, email, password, salt, Permission.valueOf(permission), date)
+      case id ~ name ~ email ~ password ~ salt ~ permission ~ date => User(id, name, email, password, salt, Permission.valueOf(permission), date)
     }
   }
 
