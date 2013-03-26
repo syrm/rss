@@ -23,6 +23,7 @@ object Parser {
       case "Alsacreations" => new Alsacreations
       case "Ubergizmo"     => new Ubergizmo
       case "WebAppers"     => new WebAppers
+      case "Webification"  => new Webification
       case _               => new Default
     }
   }
