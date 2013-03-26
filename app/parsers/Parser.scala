@@ -21,6 +21,7 @@ object Parser {
       case "Clubic"        => new Clubic
       case "Korben"        => new Korben
       case "Alsacreations" => new Alsacreations
+      case "Ubergizmo"     => new Ubergizmo
       case _               => new Default
     }
   }
