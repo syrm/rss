@@ -22,6 +22,7 @@ object Parser {
       case "Korben"        => new Korben
       case "Alsacreations" => new Alsacreations
       case "Ubergizmo"     => new Ubergizmo
+      case "WebAppers"     => new WebAppers
       case _               => new Default
     }
   }
