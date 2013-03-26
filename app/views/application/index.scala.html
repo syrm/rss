@@ -1,7 +1,7 @@
 @(feeds: Seq[Feed], items: List[(Item, Feed, Option[Read])])(implicit request: play.api.mvc.Request[Any], user: Option[User])
 
 @layout.main {
-<aside class="span2">
+<aside class="span2 hidden-phone">
     <ul>
     @for(feed <- feeds) {
         <li>@feed.name</li>
