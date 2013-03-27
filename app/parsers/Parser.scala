@@ -18,15 +18,16 @@ object Parser {
 
   def apply(name: String): Parser = {
     name match {
-      case "Clubic"        => new Clubic
-      case "Korben"        => new Korben
-      case "Alsacreations" => new Alsacreations
-      case "Ubergizmo"     => new Ubergizmo
-      case "WebAppers"     => new WebAppers
-      case "Webification"  => new Webification
-      case "NowhereElse"   => new NowhereElse
-      case "Vincent Abry"  => new VincentAbry
-      case _               => new Default
+      case "Clubic"             => new Clubic
+      case "Korben"             => new Korben
+      case "Alsacreations"      => new Alsacreations
+      case "Ubergizmo"          => new Ubergizmo
+      case "WebAppers"          => new WebAppers
+      case "Webification"       => new Webification
+      case "NowhereElse"        => new NowhereElse
+      case "Vincent Abry"       => new VincentAbry
+      case "La Ferme du web"    => new LaFermeduweb
+      case _                    => new Default
     }
   }
 
