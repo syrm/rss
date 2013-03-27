@@ -48,6 +48,20 @@ object Item {
   // -- Queries
 
   /**
+   * Retrieve Item by id.
+   */
+  def getById(id: Int): Option[(Item, Feed)] = {
+    DB.withConnection { implicit connection =>
+      SQL("""
+            select * from item
+            inner join feed on feed.id = item.feed_id
+            inner join subscription on subscription.feed_id = item.feed_id
+            where item.id = {id}
+        """).on('id -> id).as(Item.withFeed.singleOpt)
+    }
+  }
+
+  /**
    * Retrieve all Item for User.
    */
   def getAllForUser(user: User): List[(Item, Feed, Option[Read])] = {
@@ -59,7 +73,7 @@ object Item {
             left join `read` on read.item_id = item.id and read.user_id = {userId}
             where subscription.user_id = {userId}
             order by IF(read.item_id IS NULL, 0, 1), item.date desc
-            limit 30
+            limit 100
         """).on('userId -> user.id).as(Item.withFeedAndRead *)
     }
   }

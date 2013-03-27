@@ -2,7 +2,7 @@
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
 
-GET     /item/:id/read             controllers.ItemController.read(id: Int)
+GET     /item/:id                  controllers.ItemController.get(id: Int)
 GET     /process                   controllers.Process.index
 GET     /process/feed/:id          controllers.Process.feed(id: Int)
 GET     /register                  controllers.Auth.register

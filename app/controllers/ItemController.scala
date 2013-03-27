@@ -13,12 +13,18 @@ import models._
 object ItemController extends Controller with AuthElement with AuthConfig {
   import play.api.Play.current
 
-  def read(itemId: Int) = authorizedAction(NormalUser) { user =>
+  def get(id: Int) = authorizedAction(NormalUser) { user =>
     implicit request =>
       import play.api.libs.json.Json
 
-      Read.create(new Read(user.id.get, itemId, new Date()))
-      Ok(Json.obj("status" -> "OK"))
+      Read.create(new Read(user.id.get, id, new Date()))
+
+      val item = Item.getById(id)
+
+      item match {
+        case Some((item: Item, feed: Feed)) => Ok(item.content)
+        case None => Ok("Not found")
+      }
   }
 
 }

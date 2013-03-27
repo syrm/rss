@@ -1,6 +1,7 @@
 package controllers
 
 import anorm._
+import java.util.Date
 import jp.t2v.lab.play2.auth._
 import models._
 import play.api._
@@ -15,10 +16,10 @@ object Application extends Controller with AuthElement with AuthConfig {
     implicit request =>
 
       implicit val optionalUser = Option(user)
-      val feeds = Feed.getAllForUser(user)
       val items = Item.getAllForUser(user)
+      Read.create(new Read(user.id.get, items(0)._1.id.get, new Date()))
 
-      Ok(views.html.application.index(feeds, items))
+      Ok(views.html.application.index(items))
   }
 
 }

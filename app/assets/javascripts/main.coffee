@@ -2,15 +2,17 @@ jQuery ->
   $(window).on 'keypress', (event)->
     key = String.fromCharCode(event.which)
     switch key
-      when 'j' then $($(".item img.icon:in-viewport").get(0)).parent(".item").next().trigger('click')
-      when 'k' then $($(".item img.icon:in-viewport").get(0)).parent(".item").prev().trigger('click')
+      when 'j' then $('ul.items').find('.selected').next().trigger('click')
+      when 'k' then $('ul.items').find('.selected'). prev().trigger('click')
 
   $('ul.items').on
     click: (event)->
       if $(event.target).hasClass('item')
-        unless $(event.target).hasClass('read')
-          $(event.target).addClass('read')
-          $.get('/item/' + $(event.target).attr('id').replace('item_', '') + '/read')
+        $('ul.items').find('.selected').removeClass('selected')
+        $(event.target).addClass('read').addClass('selected')
         $(':animated').stop()
-        $(window).scrollTo $(event.target), 400,
-          offset: - $('.navbar').height() - 10
+        $.get '/item/' + $(event.target).attr('id').replace('item_', ''), null, (data)->
+          $('section.article').html(data)
+          Hyphenator.run()
+
+        $(window).scrollTo 0, 0
