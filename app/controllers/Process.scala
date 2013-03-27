@@ -72,12 +72,13 @@ object Process extends Controller {
         whitelist.addTags("div", "iframe", "object", "param", "embed", "section", "aside")
 
         try {
-          val page = Jsoup.connect((item \ "link").text).header("User-Agent", "Mozilla/5.0").get()
+          val page = Jsoup.connect(url).header("User-Agent", "Mozilla/5.0").get()
           val content = Jsoup.clean(parser.getContent(item, page), whitelist)
 
           Item.createOrUpdate(new Item(NotAssigned, title, url, content, date, feed.id.get))
         } catch {
           case e: HttpStatusException => println("Error (" + e.getStatusCode() + ") " + e.getUrl())
+          case e => println("Error (" + e.getClass +") " + url)
         }
       }
     }
