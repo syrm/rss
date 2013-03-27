@@ -78,7 +78,7 @@ object Process extends Controller {
           Item.createOrUpdate(new Item(NotAssigned, title, url, content, date, feed.id.get))
         } catch {
           case e: HttpStatusException => println("Error (" + e.getStatusCode() + ") " + e.getUrl())
-          case e => println("Error (" + e.getClass +") " + url)
+          case e: Throwable => println("Error (" + e.getClass +") " + url)
         }
       }
     }
