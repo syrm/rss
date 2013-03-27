@@ -5,6 +5,7 @@ import java.net._
 import java.util.Date
 import java.util.Locale
 import java.text.SimpleDateFormat
+import org.jsoup.HttpStatusException
 import org.jsoup.Jsoup
 import org.jsoup.safety.Whitelist
 import play.api._
@@ -70,10 +71,14 @@ object Process extends Controller {
         whitelist.addAttributes("param", "name", "value")
         whitelist.addTags("div", "iframe", "object", "param", "embed", "section", "aside")
 
-        val page = Jsoup.connect((item \ "link").text).get()
-        val content = Jsoup.clean(parser.getContent(item, page), whitelist)
+        try {
+          val page = Jsoup.connect((item \ "link").text).header("User-Agent", "Mozilla/5.0").get()
+          val content = Jsoup.clean(parser.getContent(item, page), whitelist)
 
-        Item.createOrUpdate(new Item(NotAssigned, title, url, content, date, feed.id.get))
+          Item.createOrUpdate(new Item(NotAssigned, title, url, content, date, feed.id.get))
+        } catch {
+          case e: HttpStatusException => println("Error (" + e.getStatusCode() + ") " + e.getUrl())
+        }
       }
     }
 
