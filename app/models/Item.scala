@@ -13,7 +13,8 @@ case class Item(
   url:     String,
   content: String,
   date:    Option[Date],
-  feedId:  Long
+  feedId:  Long,
+  guid:    String
 ) {
 
   override def toString() = "Item#" + id
@@ -32,8 +33,9 @@ object Item {
     get[String]("item.url") ~
     get[String]("item.content") ~
     get[Option[Date]]("item.date") ~
-    get[Long]("item.feed_id") map {
-        case id ~ title ~ url ~ content ~ date ~ feedId => Item(id, title, url, content, date, feedId)
+    get[Long]("item.feed_id") ~
+    get[String]("item.guid") map {
+        case id ~ title ~ url ~ content ~ date ~ feedId ~ guid => Item(id, title, url, content, date, feedId, guid)
       }
   }
 
@@ -99,17 +101,18 @@ object Item {
 
       val id = SQL("""
             insert into item
-            (id, title, url, content, date, feed_id)
+            (id, title, url, content, date, feed_id, guid)
             values
-            ({id}, {title}, {url}, {content}, {date}, {feedId})
-            on duplicate key update title = {title}, content = {content}, date = {date}
+            ({id}, {title}, {url}, {content}, {date}, {feedId}, {guid})
+            on duplicate key update title = {title}, content = {content}, date = {date}, guid = {guid}
         """).on(
         'id      -> item.id,
         'title   -> item.title,
         'url     -> item.url,
         'content -> item.content,
         'date    -> item.date,
-        'feedId  -> item.feedId
+        'feedId  -> item.feedId,
+        'guid    -> item.guid
       ).executeUpdate()
 
       item.copy(id = Id(id))

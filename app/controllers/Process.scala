@@ -54,6 +54,7 @@ object Process extends Controller {
     for (item <- rss \\ "item") {
       val title = (item \ "title").text
       val url   = (item \ "link").text
+      val guid  = (item \ "guid").text
 
       println(url)
 
@@ -75,7 +76,7 @@ object Process extends Controller {
           val page = Jsoup.connect(url).header("User-Agent", "Mozilla/5.0").get()
           val content = Jsoup.clean(parser.getContent(item, page), whitelist)
 
-          Item.createOrUpdate(new Item(NotAssigned, title, url, content, date, feed.id.get))
+          Item.createOrUpdate(new Item(NotAssigned, title, url, content, date, feed.id.get, guid))
         } catch {
           case e: HttpStatusException => println("Error (" + e.getStatusCode() + ") " + e.getUrl())
           case e: Throwable => println("Error (" + e.getClass +") " + url)
