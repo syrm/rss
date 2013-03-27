@@ -18,7 +18,17 @@ import parsers._
 object Process extends Controller {
   import play.api.Play.current
 
-  def index = Action {
+  def LocalAction(f: Request[AnyContent] => Result): Action[AnyContent] = {
+    Action { request =>
+      if (request.remoteAddress == "127.0.0.1") {
+        f(request)
+      } else {
+        Results.Unauthorized("Unauthorized.")
+      }
+    }
+  }
+
+  def index = LocalAction { request =>
     var newArticle: Int = 0
 
     val feeds = Feed.getAll
@@ -34,7 +44,8 @@ object Process extends Controller {
   }
 
 
-  def feed(id: Int) = Action {
+  def feed(id: Int) = LocalAction { request =>
+
     val feed = Feed.getById(id)
 
     feed match {
