@@ -1,0 +1,35 @@
+@(feeds: Seq[Feed], form: Form[(String)])(implicit request: play.api.mvc.Request[Any], user: Option[User])
+
+@styles = {
+    <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/settings.css")">
+}
+
+@layout.main(styles) {
+<section class="span12 settings">
+    <form action="@routes.Settings.feedNew" method="post" class="register form-inline">
+        <div>
+            <input type="text" id="url" name="url" value="@form("url").value" maxlength="255" placeholder="Feed">
+            <button type="submit" class="btn btn-success">Add</button>
+        </div>
+    </form>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Feed URL</th>
+                <th>&nbsp;</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for(feed <- feeds) {
+            <tr>
+                <td>@feed.name</td>
+                <td>@feed.url</td>
+                <td><a href="@routes.Settings.feedUnsubscribe(feed.id.get)"><i class="icon-trash"></i></a></td>
+            </tr>
+            }
+        </tbody>
+    </table>
+</section>
+}

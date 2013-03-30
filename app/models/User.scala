@@ -76,7 +76,7 @@ object User {
    */
   def create(user: User): User = {
     DB.withConnection { implicit connection =>
-      val id = SQL("""
+      val id: Option[Long] = SQL("""
           insert into user (
               name, email, password, salt, date
             ) values (

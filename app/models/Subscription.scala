@@ -59,4 +59,15 @@ object Subscription {
     }
   }
 
+  /**
+   * Delete a Subscription.
+   */
+  def delete(user: User, feed: Feed) {
+    DB.withConnection { implicit connection =>
+      SQL("delete from subscription where user_id = {userId} and feed_id = {feedId}").on(
+        'userId -> user.id.get,
+        'feedId -> feed.id.get
+      ).executeUpdate()
+    }
+  }
 }

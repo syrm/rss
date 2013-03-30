@@ -1,8 +1,12 @@
 @(items: List[(Item, Feed, Option[Read])])(implicit request: play.api.mvc.Request[Any], user: Option[User])
 
-@layout.main {
-<aside class="span4 hidden-phone">
-    <ul class="items">
+@styles = {
+    <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/application.css")">
+}
+
+@layout.main(styles) {
+<aside class="span4 items">
+    <ul>
     @for((item, itemFeed, itemRead) <- items) {
         <li id="item_@item.id" class="item @itemRead.map(_ => "read").getOrElse("") @if(item.id == items(0)._1.id) { selected }">
             <img title="@itemFeed.name" class="icon" src="@itemFeed.favicon" />

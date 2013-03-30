@@ -1,4 +1,4 @@
-@(content: Html)(implicit request: play.api.mvc.Request[Any], user: Option[User] = None)
+@(styles: Html = Html(""))(content: Html)(implicit request: play.api.mvc.Request[Any], user: Option[User] = None)
 <!doctype html>
 <html lang="fr">
     <head>
@@ -9,6 +9,7 @@
         <link rel="stylesheet" media="screen" href="@routes.Assets.at("res/bootstrap/css/bootstrap-responsive.css")">
         <link rel="stylesheet" media="screen" href="@routes.Assets.at("res/Font-Awesome/css/font-awesome.css")">
         <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/main.css")">
+        @styles
         <link href="http://fonts.googleapis.com/css?family=Roboto:300,400" media="screen" rel="stylesheet" type="text/css" />
         <link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")">
     </head>
@@ -19,7 +20,7 @@
                 <ul class="nav pull-right">
                 @user match {
                     case Some(user: User) => {
-                        <li><a class="user" href="#"><strong>@user.name</strong></a></li>
+                        <li><a class="user" href="@routes.Settings.feed"><strong>@user.name</strong></a></li>
                         <li><a class="logout" href="@routes.Auth.logout"><i class="icon-off"></i></a></li>
 
                     }
