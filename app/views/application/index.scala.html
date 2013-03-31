@@ -7,8 +7,8 @@
 @layout.main(styles) {
 <aside class="span4 items">
     <ul>
-    @for(((item, itemFeed, itemRead), index) <- items.view.zipWithIndex) {
-        <li id="item_@item.id" class="item @itemRead.map(_ => "read").getOrElse("") @if(item.id == items(0)._1.id) { selected } @if(index > 5) { hidden-phone }">
+    @for((item, itemFeed, itemRead) <- items) {
+        <li id="item_@item.id" class="item @itemRead.map(_ => "read").getOrElse("") @if(item.id == items(0)._1.id) { selected }">
             <img title="@itemFeed.name" class="icon" src="@itemFeed.favicon" />
             @if(item.date == None) { <em class="date">!</em> }
             @item.title
