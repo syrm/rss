@@ -1,4 +1,4 @@
-@(items: List[(Item, Feed, Option[Read])])(implicit request: play.api.mvc.Request[Any], user: Option[User])
+@(items: List[(Item, Feed, Option[Read], Option[Bookmark])])(implicit request: play.api.mvc.Request[Any], user: Option[User])
 
 @styles = {
     <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/application.css")">
@@ -7,7 +7,7 @@
 @layout.main(styles) {
 <aside class="span4 items">
     <ul>
-    @for((item, itemFeed, itemRead) <- items) {
+    @for((item, itemFeed, itemRead, itemBookmark) <- items) {
         <li id="item_@item.id" class="item @itemRead.map(_ => "read").getOrElse("") @if(item.id == items(0)._1.id) { selected }">
             <img title="@itemFeed.name" class="icon" src="@itemFeed.favicon" />
             @if(item.date == None) { <em class="date">!</em> }
@@ -17,6 +17,10 @@
     </ul>
 </aside>
 <section class="span8 hyphenate article">
-@views.html.item.get(items(0)._1, items(0)._2)
+@if(items.size > 0) {
+    @views.html.item.get(items(0)._1, items(0)._2, items(0)._4)
+} else {
+    No items.
+}
 </section>
 }

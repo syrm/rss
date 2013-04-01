@@ -5,7 +5,9 @@
 GET     /settings                           controllers.Settings.feed
 POST    /settings/feed/new                  controllers.Settings.feedNew
 GET     /settings/feed/:id/unsubscribe      controllers.Settings.feedUnsubscribe(id: Long)
-GET     /item/:id                           controllers.ItemController.get(id: Int)
+GET     /item/:id                           controllers.ItemController.get(id: Long)
+GET     /item/:id/star                      controllers.ItemController.star(id: Long)
+GET     /item/:id/unstar                    controllers.ItemController.unstar(id: Long)
 GET     /process                            controllers.Process.index
 GET     /process/feed/:id                   controllers.Process.feed(id: Int)
 GET     /register                           controllers.Auth.register

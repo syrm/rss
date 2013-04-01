@@ -5,26 +5,46 @@ section.article {
   padding: 10px;
   text-align: justify;
 
-  h1 {
-    margin-top: 0;
+  .title {
     padding-bottom: 10px;
-    font-size: 20px;
-    line-height: 20px;
+    margin-bottom: 20px;
     border-bottom: 1px solid #eee;
+    clear: both;
+    overflow: hidden;
 
-    a {
-      color: #444;
-      text-decoration: none;
-    }
-
-    a:hover {
-      color: #0088cc;
-    }
-
-    img {
+    h1 {
+      float: left;
       margin: 0;
-      display: inline;
-      height: 18px;
+      font-size: 20px;
+      line-height: 20px;
+
+      a {
+        color: #444;
+        text-decoration: none;
+      }
+
+      a:hover {
+        color: #0088cc;
+      }
+
+      img {
+        margin: 0;
+        display: inline;
+        height: 18px;
+      }
+    }
+
+    .tools {
+      float: right;
+
+      a.star {
+        color: #999;
+        text-decoration: none;
+      }
+
+      a.star:hover {
+        color: #0088cc;
+      }
     }
   }
 

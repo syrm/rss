@@ -1,4 +1,10 @@
 jQuery ->
+  window.switchStar = (element)->
+    if $(element).hasClass('icon-star-empty')
+      $(element).removeClass('icon-star-empty').addClass('icon-star')
+    else
+      $(element).removeClass('icon-star').addClass('icon-star-empty')
+
   $(window).on 'keypress', (event)->
     key = String.fromCharCode(event.which)
     switch key
@@ -16,3 +22,8 @@ jQuery ->
           Hyphenator.run()
 
         $(window).scrollTo 0, 0
+
+  $(document).on 'click', '.star i', (event)->
+    event.preventDefault()
+    $.get $(event.target).parent().attr('href')
+    switchStar(event.target)

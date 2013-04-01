@@ -43,8 +43,16 @@ object Item {
     case item ~ feed => (item, feed)
   }
 
-  val withFeedAndRead = Item.simple ~ Feed.simple ~ (Read.simple ?) map {
-    case item ~ feed ~ read => (item, feed, read)
+  val withFeedAndRead = Item.withFeed ~ (Read.simple ?) map {
+    case (item, feed) ~ read => (item, feed, read)
+  }
+
+  val withFeedAndReadAndBookmark = Item.withFeedAndRead ~ (Bookmark.simple ?) map {
+    case (item, feed, read) ~ bookmark => (item, feed, read, bookmark)
+  }
+
+  val withFeedAndBookmark = Item.withFeed ~ (Bookmark.simple ?) map {
+    case (item, feed) ~ bookmark => (item, feed, bookmark)
   }
 
   // -- Queries
@@ -52,31 +60,33 @@ object Item {
   /**
    * Retrieve Item by id.
    */
-  def getById(id: Int): Option[(Item, Feed)] = {
+  def getById(id: Long)(implicit user: User): Option[(Item, Feed, Option[Bookmark])] = {
     DB.withConnection { implicit connection =>
       SQL("""
             select * from item
             inner join feed on feed.id = item.feed_id
             inner join subscription on subscription.feed_id = item.feed_id
-            where item.id = {id}
-        """).on('id -> id).as(Item.withFeed.singleOpt)
+            left join bookmark on bookmark.item_id = item.id and bookmark.user_id = {userId}
+            where item.id = {id} and subscription.user_id = {userId}
+        """).on('id -> id, 'userId -> user.id.get).as(Item.withFeedAndBookmark.singleOpt)
     }
   }
 
   /**
    * Retrieve all Item for User.
    */
-  def getAllForUser(user: User): List[(Item, Feed, Option[Read])] = {
+  def getAllForUser(user: User): List[(Item, Feed, Option[Read], Option[Bookmark])] = {
     DB.withConnection { implicit connection =>
       SQL("""
             select * from item
             inner join feed on feed.id = item.feed_id
             inner join subscription on subscription.feed_id = item.feed_id
             left join `read` on read.item_id = item.id and read.user_id = {userId}
+            left join bookmark on bookmark.item_id = item.id and bookmark.user_id = {userId}
             where subscription.user_id = {userId}
             order by IF(read.item_id IS NULL, 0, 1), item.date desc
             limit 100
-        """).on('userId -> user.id).as(Item.withFeedAndRead *)
+        """).on('userId -> user.id).as(Item.withFeedAndReadAndBookmark *)
     }
   }
 
