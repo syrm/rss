@@ -19,10 +19,10 @@ object ItemController extends Controller with AuthElement with AuthConfig {
 
       Read.create(new Read(user.id.get, id, new Date()))
 
-      val item = Item.getById(id)
+      val itemWithFeed = Item.getById(id)
 
-      item match {
-        case Some((item: Item, feed: Feed)) => Ok(item.content)
+      itemWithFeed match {
+        case Some((item: Item, feed: Feed)) => Ok(views.html.item.get(item, feed))
         case None => Ok("Not found")
       }
   }

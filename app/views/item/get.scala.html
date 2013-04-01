@@ -1,0 +1,6 @@
+@(item: Item, feed: Feed)
+
+<h1><img title="@feed.name" class="icon" src="@feed.favicon" /> <a href="@item.url">@item.title</a></h1>
+<div class="content">
+@Html(item.content)
+</div>
