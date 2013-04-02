@@ -109,7 +109,7 @@ object Item {
   def createOrUpdate(item: Item): Item = {
     DB.withConnection { implicit connection =>
 
-      val id: Option[Long] = SQL("""
+      SQL("""
             insert into item
             (id, title, url, content, date, feed_id, guid)
             values
@@ -123,9 +123,9 @@ object Item {
         'date    -> item.date,
         'feedId  -> item.feedId,
         'guid    -> item.guid
-      ).executeInsert()
+      ).executeUpdate()
 
-      item.copy(id = Id(id.get))
+      item
     }
   }
 
