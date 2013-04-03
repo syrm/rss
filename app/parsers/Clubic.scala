@@ -34,7 +34,7 @@ class Clubic extends Default {
         content.select("div#block1").remove()
         content.select("div#commentaires").remove()
 
-        content.html()
+        processVideo(content).html()
       }
       case null => ""
     }
@@ -73,7 +73,7 @@ class Clubic extends Default {
         content.select("div.M6ComponentSocialBar").remove()
         content.select("div#follow_button").remove()
 
-        content.html()
+        processVideo(content).html()
       }
       case null => ""
     }
@@ -91,19 +91,23 @@ class Clubic extends Default {
   def parseArticle(item: Node, page: Document) = {
     page.select("div.editorial").first() match {
       case content: Element => {
-        content.select("div.prePlayer").remove()
-        for(video <- content.select("div.playerDiv")) {
-          val tagObject = video.select("object")
-          tagObject.removeAttr("height").removeAttr("width")
-          tagObject.html(tagObject.html().replace("AUTOPLAY=true", ""))
-          video.removeAttr("class")
-          video.wrap("<div class='videoWrapper'></div>")
-        }
-        content.html()
+        processVideo(content).html()
       }
       case null => ""
     }
   }
 
+
+  def processVideo(content: Element) = {
+    content.select("div.prePlayer").remove()
+    for(video <- content.select("div.playerDiv")) {
+      val tagObject = video.select("object")
+      tagObject.removeAttr("height").removeAttr("width")
+      tagObject.html(tagObject.html().replace("AUTOPLAY=true", ""))
+      video.removeAttr("class")
+      video.wrap("<div class='videoWrapper'></div>")
+    }
+    content
+  }
 
 }
