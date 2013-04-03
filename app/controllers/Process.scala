@@ -83,7 +83,7 @@ object Process extends Controller {
         whitelist.addAttributes("param", "name", "value")
         whitelist.addAttributes("object", "data")
         whitelist.addAttributes("div", "class")
-        whitelist.addTags("div", "iframe", "object", "param", "embed", "section", "aside")
+        whitelist.addTags("div", "iframe", "object", "param", "embed", "section", "aside", "h1", "h2", "h3", "h4", "h5", "h6")
 
         try {
           val page = Jsoup.connect(url).header("User-Agent", "Mozilla/5.0").get()
