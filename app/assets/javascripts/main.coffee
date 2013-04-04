@@ -1,4 +1,26 @@
 jQuery ->
+  if (typeof document.hidden != "undefined")
+    document.visibilityChange = "visibilitychange";
+    document.visibilityState = "visibilityState";
+  else if (typeof document.mozHidden != "undefined")
+    document.visibilityChange = "mozvisibilitychange";
+    document.visibilityState = "mozVisibilityState";
+  else if (typeof document.msHidden != "undefined")
+    document.visibilityChange = "msvisibilitychange";
+    document.visibilityState = "msVisibilityState";
+  else if (typeof document.webkitHidden != "undefined")
+    document.visibilityChange = "webkitvisibilitychange";
+    document.visibilityState = "webkitVisibilityState";
+
+
+  # Mark read first item when tab is visible
+  if (document[document.visibilityState] == "visible" && $(".items li").eq(0).hasClass("read") == false)
+    $.get '/item/' + $(".items li").eq(0).attr('id').replace('item_', '')
+
+  $(document).on document.visibilityChange, (event)->
+    if (document[document.visibilityState] == "visible" && $(".items li").eq(0).hasClass("read") == false)
+      $.get '/item/' + $(".items li").eq(0).attr('id').replace('item_', '')
+
   window.switchStar = (element)->
     if $(element).hasClass('icon-star-empty')
       $(element).removeClass('icon-star-empty').addClass('icon-star')

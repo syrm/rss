@@ -18,10 +18,6 @@ object Application extends Controller with AuthElement with AuthConfig {
       implicit val optionalUser = Option(user)
       val items = Item.getAllForUser(user)
 
-      if (items.size > 0) {
-        Read.create(new Read(user.id.get, items(0)._1.id.get, new Date()))
-      }
-
       Ok(views.html.application.index(items))
   }
 
