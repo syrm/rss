@@ -12,6 +12,10 @@ body {
   color: #444;
 }
 
+strong {
+  font-weight: 400;
+}
+
 @media (max-width: 979px) {
   body {
     padding-top: 0;
@@ -33,4 +37,26 @@ input[type="text"], input[type="password"], textarea, button {
 
 section {
   margin-bottom: 40px;
+}
+
+form {
+  label, input, button {
+    font-family: Roboto;
+    font-size: 16px !important;
+    font-weight: 300 !important;
+  }
+}
+
+.register {
+  div.large {
+    text-align: center;
+
+    .error {
+      color: #B94A48;
+    }
+
+    button {
+      width: 205px;
+    }
+  }
 }
