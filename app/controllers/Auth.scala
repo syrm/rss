@@ -15,11 +15,7 @@ object Auth extends Controller with LoginLogout with AuthConfig {
     mapping(
       "username" -> text.verifying(nonEmpty),
       "password" -> text.verifying(nonEmpty))(User.authenticate)(_.map(user => (user.name, "")))
-    )
-
-      /* verifying ("Invalid username or password", result => result match {
-        case (username, password) => User.authenticate(username, password)
-      }))*/
+    .verifying("Invalid username or password", result => result.isDefined))
 
   val registerForm = Form(
     tuple(
