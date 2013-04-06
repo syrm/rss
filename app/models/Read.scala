@@ -14,7 +14,7 @@ case class Read(
   date:    Date
 ) {
 
-  override def toString() = "Read#" + userId + "," + itemId
+  override def toString() = "Read#" + userId + "-" + itemId
 }
 
 object Read {

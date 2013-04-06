@@ -14,7 +14,7 @@ case class Bookmark(
   date:    Date
 ) {
 
-  override def toString() = "Bookmark#" + userId + "," + itemId
+  override def toString() = "Bookmark#" + userId + "-" + itemId
 }
 
 object Bookmark {
