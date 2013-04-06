@@ -1,4 +1,6 @@
 jQuery ->
+  $('.dropdown-toggle').dropdown()
+
   if (typeof document.hidden != "undefined")
     document.visibilityChange = "visibilitychange";
     document.visibilityState = "visibilityState";
@@ -40,7 +42,30 @@ jQuery ->
         $(event.target).addClass('selected')
         $(':animated').stop()
         $.get '/item/' + $(event.target).attr('id').replace('item_', ''), null, (data)->
-          $('section.article').html(data)
+          if (data.feed.unread == 0)
+            $('#feed_' + data.feed.id + ' .unread').remove()
+          else
+            $('#feed_' + data.feed.id + ' .unread').text(data.feed.unread)
+
+          $('section.article .title img').eq(0)
+            .attr('title', data.feed.name)
+            .attr('src', data.feed.favicon)
+
+          $('section.article .title a').eq(0)
+            .attr("href", data.item.url)
+            .html(data.item.title)
+
+          if (data.bookmark == true)
+            $('section.article .title .tools .star').eq(0)
+              .attr('href', '/item/' + data.item.id + '/unstar')
+              .find('i').attr('class', 'icon-star')
+          else
+            $('section.article .title .tools .star').eq(0)
+              .attr('href', '/item/' + data.item.id + '/star')
+              .find('i').attr('class', 'icon-star-empty')
+
+          $('section.article .content').html(data.item.content)
+
           Hyphenator.run()
 
         $(window).scrollTo 0, 0

@@ -22,8 +22,31 @@ object ItemController extends Controller with AuthElement with AuthConfig {
       val itemWithFeedAndBookmark = Item.getById(id)
 
       itemWithFeedAndBookmark match {
-        case Some((item: Item, feed: Feed, bookmark: Option[Bookmark])) => Ok(views.html.item.get(item, feed, bookmark))
-        case None => Ok("Not found")
+        case Some((item: Item, feed: Feed, bookmark: Option[Bookmark])) => {
+
+          val bookmarkBoolean = bookmark.map(_ => true).getOrElse(false)
+          val json = Json.obj(
+            "status" -> "ok",
+            "item" ->
+              Json.obj(
+                "id"      -> item.id.get,
+                "title"   -> item.title,
+                "url"     -> item.url,
+                "content" -> item.content
+              ),
+            "feed" ->
+              Json.obj(
+                "id"      -> feed.id.get,
+                "name"    -> feed.name,
+                "favicon" -> feed.favicon,
+                "unread"  -> feed.unread
+              ),
+            "bookmark" -> bookmarkBoolean
+            )
+
+          Ok(json)
+        }
+        case None => Ok(Json.obj("stauts" -> "ko"))
       }
   }
 

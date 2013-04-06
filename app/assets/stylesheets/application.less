@@ -1,6 +1,5 @@
 
 section.article {
-  margin-left: 430px;
   background: white;
   padding: 10px;
   text-align: justify;
@@ -86,23 +85,109 @@ section.article {
   }
 }
 
-aside.items {
-  position: fixed;
-  top: 65px;
-  bottom: 20px;
-  overflow: auto;
+aside {
+  .feeds {
+    position: fixed;
+    width: inherit;
+    margin-bottom: 10px;
+    background: white;
+    z-index: 1000;
 
-  ul {
+    .dropdown-toggle {
+      display: inline-block;
+      width: inherit;
+      padding: 10px;
+      padding-left: 15px;
+
+      img.icon {
+        position: relative;
+        top: -2px;
+        height: 16px;
+        margin-right: 3px;
+      }
+
+      i {
+        padding-right: 2px;
+      }
+
+      b.caret {
+        float: right;
+      }
+    }
+
+    .dropdown-toggle:hover {
+      color: #0088cc;
+      background: #f6f6f6;
+      text-decoration: none;
+    }
+
+    .dropdown-toggle:focus {
+      color: white;
+      background: #0088cc;
+      text-decoration: none;
+    }
+
+    .dropdown-menu {
+      width: inherit;
+      border: 0;
+      border-radius: 0;
+
+      li {
+        width: inherit;
+
+        a  {
+          display: inline-block;
+          width: inherit;
+          padding-left: 10px;
+          line-height: 28px;
+          color: #444;
+          font-weight: 300;
+
+          img.icon {
+            position: relative;
+            top: -1px;
+            height: 15px;
+            margin-left: 3px;
+            margin-right: 3px;
+          }
+
+          .unread {
+            float: right;
+          }
+        }
+
+        a:hover {
+          color: #444;
+          background: #f6f6f6;
+        }
+      }
+
+      li:hover {
+        background: #f6f6f6;
+      }
+
+      li.divider {
+        margin: 0;
+        margin-bottom: 10px;
+      }
+    }
+  }
+
+  .items {
+    position: fixed;
+    top: 117px;
+    bottom: 20px;
+    width: inherit;
+    overflow: auto;
     list-style-type: none;
     margin: 0;
+    padding-top: 10px;
     background: white;
 
     li.item {
       line-height: 20px;
-      margin-left: 10px;
-      margin-right: 10px;
-      padding-left: 5px;
-      padding-right: 5px;
+      padding-left: 15px;
+      padding-right: 15px;
       padding-top: 8px;
       padding-bottom: 8px;
       border-bottom: 1px solid #eee;
@@ -135,13 +220,18 @@ aside.items {
       margin-bottom: 0;
     }
 
+    li.item:hover {
+      background: #f6f6f6;
+    }
+
     li.item.read {
       color: #aaa;
       font-weight: 300;
     }
 
     li.item.selected {
-      background: #f6f6f6;
+      color: white;
+      background: #0088cc;
     }
   }
 }
@@ -153,7 +243,7 @@ aside.items {
 }
 
 @media (min-width: 768px) and (max-width: 979px) {
-  aside.items {
+  aside {
     top: 73px;
   }
 
@@ -163,7 +253,7 @@ aside.items {
 }
 
 @media (max-width: 767px) {
-  aside.items {
+  aside {
     position: static;
     height: 150px;
   }

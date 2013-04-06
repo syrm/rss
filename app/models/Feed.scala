@@ -14,6 +14,8 @@ case class Feed(
   url:  String,
   favicon: Option[String]) {
 
+  var unread: Long = 0
+
   override def toString() = "Feed#" + id
 }
 
@@ -34,6 +36,13 @@ object Feed {
       }
   }
 
+  val withUnread = Feed.simple ~ get[Long]("unread") map {
+    case feed ~ unread => {
+      feed.unread = unread
+      feed
+    }
+  }
+
   // -- Queries
 
 
@@ -44,8 +53,20 @@ object Feed {
     DB.withConnection { implicit connection =>
       SQL("""
             select * from feed
-            where id = {id}
         """).on('id -> id).as(Feed.simple.singleOpt)
+    }
+  }
+
+  /**
+   * Retrieve Feed by id for User.
+   */
+  def getByIdForUser(id: Long, user: User): Option[Feed] = {
+    DB.withConnection { implicit connection =>
+      SQL("""
+            select * from feed
+            inner join subscription on subscription.feed_id = feed.id
+            where feed.id = {id} and subscription.user_id = {userId}
+        """).on('id -> id, 'userId -> user.id.get).as(Feed.simple.singleOpt)
     }
   }
 
@@ -79,10 +100,13 @@ object Feed {
   def getAllForUser(user: User): Seq[Feed] = {
     DB.withConnection { implicit connection =>
       SQL("""
-            select * from feed
+            select feed.*,
+            (select count(*) from item
+              where item.feed_id = feed.id and not exists (select 1 from `read` where read.item_id = item.id and read.user_id = {userId})) as unread
+            from feed
             inner join subscription on subscription.feed_id = feed.id
             where subscription.user_id = {userId}
-        """).on('userId -> user.id).as(Feed.simple *)
+        """).on('userId -> user.id).as(Feed.withUnread *)
     }
   }
 

@@ -16,9 +16,24 @@ object Application extends Controller with AuthElement with AuthConfig {
     implicit request =>
 
       implicit val optionalUser = Option(user)
+
+      val feeds = Feed.getAllForUser(user)
       val items = Item.getAllForUser(user)
 
-      Ok(views.html.application.index(items))
+      Ok(views.html.application.index(None, feeds, items))
+  }
+
+
+  def feed(id: Long) = authorizedAction(NormalUser) { user =>
+    implicit request =>
+
+      implicit val optionalUser = Option(user)
+
+      val feed  = Feed.getByIdForUser(id, user)
+      val feeds = Feed.getAllForUser(user)
+      val items = Item.getAllFromFeedForUser(id, user)
+
+      Ok(views.html.application.index(feed, feeds, items))
   }
 
 }

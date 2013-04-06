@@ -1,12 +1,31 @@
-@(items: List[(Item, Feed, Option[Read], Option[Bookmark])])(implicit request: play.api.mvc.Request[Any], user: Option[User])
+@(feed: Option[Feed], feeds: Seq[Feed], items: List[(Item, Feed, Option[Read], Option[Bookmark])])(implicit request: play.api.mvc.Request[Any], user: Option[User])
 
 @styles = {
     <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/application.css")">
 }
 
 @layout.main(styles) {
-<aside class="span4 items">
-    <ul>
+<aside class="span4">
+    <div class="feeds dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+            @feed match {
+                case None       => { <i class="icon-hdd"></i> All }
+                case Some(feed) => { <img title="@feed.name" class="icon" src="@feed.favicon" /> @feed.name @if(feed.unread > 0) {<span class="unread">@feed.unread</span>} }
+            }
+        <b class="caret"></b></a>
+        <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+            @if(feed != None) {
+                <li><a class="menuitem" href="@routes.Application.index"><i class="icon-hdd"></i> All</a></li>
+                <li class="divider"></li>
+            }
+            @for(f <- feeds) {
+                @if(feed == None || f.id != feed.get.id) {
+                    <li id="feed_@f.id"><a class="menuitem" href="@routes.Application.feed(f.id.get)"><img title="@f.name" class="icon" src="@f.favicon" /> @f.name @if(f.unread > 0) {<span class="unread">@f.unread</span>}</a></li>
+                }
+            }
+        </ul>
+    </div>
+    <ul class="items">
     @for((item, itemFeed, itemRead, itemBookmark) <- items) {
         <li id="item_@item.id" class="item @itemRead.map(_ => "read").getOrElse("") @if(item.id == items(0)._1.id) { selected }">
             <img title="@itemFeed.name" class="icon" src="@itemFeed.favicon" />
@@ -16,9 +35,24 @@
     }
     </ul>
 </aside>
-<section class="span8 hyphenate article">
+<section class="span8 article">
 @if(items.size > 0) {
-    @views.html.item.get(items(0)._1, items(0)._2, items(0)._4)
+    @items(0) match {
+        case (item, feed, read, bookmark) => {
+            <div class="title">
+                <h1><img title="@feed.name" class="icon" src="@feed.favicon" /> <a href="@item.url">@item.title</a></h1>
+                <div class="tools">
+                    @bookmark match {
+                        case None => { <a class="star" href="@routes.ItemController.star(item.id.get)"><i class="icon-star-empty"></i></a> }
+                        case Some(bookmark) => { <a class="star" href="@routes.ItemController.unstar(item.id.get)"><i class="icon-star"></i></a> }
+                    }
+                </div>
+            </div>
+            <div class="content hyphenate">
+            @Html(item.content)
+            </div>
+        }
+    }
 } else {
     No items.
 }
