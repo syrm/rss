@@ -53,6 +53,7 @@ object Feed {
     DB.withConnection { implicit connection =>
       SQL("""
             select * from feed
+            where feed.id = {id}
         """).on('id -> id).as(Feed.simple.singleOpt)
     }
   }
