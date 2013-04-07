@@ -8,8 +8,8 @@ import scala.xml.Node
 class VincentAbry extends Default {
 
   override def getContent(item: Node, page: Document) = {
-    page.select("div.entry p") match {
-      case content: Elements => {
+    page.select("div.entry").first() match {
+      case content: Element => {
         for(img <- content.select("img")) {
           val src = if (img.hasAttr("pagespeed_high_res_src") == true) {
               img.attr("pagespeed_high_res_src")
@@ -21,7 +21,16 @@ class VincentAbry extends Default {
           img.attr("src", src)
         }
 
-        content.select("p:last-of-type").remove()
+        content.select("[class^=pub-]").remove()
+        content.select("div.meta-single").remove()
+        content.select("div#respond").remove()
+        content.select("div#comments").remove()
+        content.select("div.commentlist").remove()
+        content.select("div.navigation").remove()
+        content.select("iframe:last-of-type").remove()
+        content.select("div#wp_rp_first").remove()
+        content.select("br:last-of-type").remove()
+        content.select("br:last-of-type").remove()
 
         content.html()
       }
