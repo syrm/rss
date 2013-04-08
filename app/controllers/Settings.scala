@@ -82,7 +82,11 @@ object Settings extends Controller with AuthElement with AuthConfig {
 
   def feedUnsubscribe(id: Long) = authorizedAction(NormalUser) { user =>
     implicit request =>
-      Subscription.delete(user, Feed.getById(id).get)
+      Feed.getById(id) match {
+        case Some(feed) => Subscription.delete(user, feed)
+        case None => None
+      }
+
       Redirect(routes.Settings.feed)
   }
 
