@@ -20,7 +20,11 @@ object Application extends Controller with AuthElement with AuthConfig {
       val feeds = Feed.getAllForUser(user)
       val items = Item.getAllForUser(user)
 
-      Ok(views.html.application.index(None, feeds, items))
+      if (feeds.length == 0) {
+        Ok(views.html.application.welcome())
+      } else {
+        Ok(views.html.application.index(None, feeds, items))
+      }
   }
 
 
