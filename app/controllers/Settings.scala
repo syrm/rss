@@ -72,7 +72,7 @@ object Settings extends Controller with AuthElement with AuthConfig {
               case e: Throwable => println("Error (" + e.getClass +") settings.feedNew " + url)
             }
 
-            Redirect(routes.Settings.feed)
+            Redirect(routes.Settings.feed).flashing("success" -> "Feed will be available within 15 minutes.")
           }
         }
       )

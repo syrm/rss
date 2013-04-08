@@ -1,4 +1,4 @@
-@(feeds: Seq[Feed], form: Form[(String)])(implicit request: play.api.mvc.Request[Any], user: Option[User])
+@(feeds: Seq[Feed], form: Form[(String)])(implicit request: play.api.mvc.Request[Any], user: Option[User], flash: Flash)
 
 @styles = {
     <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/settings.css")">
@@ -6,6 +6,10 @@
 
 @layout.main(styles) {
 <section class="span12 settings">
+    @flash.get("success").map { msg =>
+        <p class="text-success">@msg</p>
+    }
+
     <form action="@routes.Settings.feedNew" method="post" class="register form-inline">
         <div>
             <input type="text" id="url" name="url" value="@form("url").value" maxlength="255" placeholder="Feed">
