@@ -87,7 +87,7 @@ object Process extends Controller {
 
         try {
           val page = Jsoup.connect(url).header("User-Agent", "Mozilla/5.0").get()
-          val content = Jsoup.clean(parser.getContent(item, page), whitelist)
+          val content = Jsoup.clean(parser.getContent(item, page), whitelist).replaceAll("<([^> ]+)( class=[^>]+)?></\\1>", "")
 
           Item.createOrUpdate(new Item(NotAssigned, title, url, content, date, feed.id.get, guid))
         } catch {
