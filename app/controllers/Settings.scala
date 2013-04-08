@@ -68,11 +68,13 @@ object Settings extends Controller with AuthElement with AuthConfig {
               val feed = Feed.create(new Feed(NotAssigned, name, site, url, favicon))
               Subscription.create(new Subscription(user.id.get, feed.id.get, new Date()))
 
+              Redirect(routes.Settings.feed).flashing("success" -> "Feed will be available within 15 minutes.")
             } catch {
-              case e: Throwable => println("Error (" + e.getClass +") settings.feedNew " + url)
+              case e: Throwable => {
+                println("Error (" + e.getClass +") settings.feedNew " + url)
+                Redirect(routes.Settings.feed).flashing("error" -> "Feed invalid.")
+              }
             }
-
-            Redirect(routes.Settings.feed).flashing("success" -> "Feed will be available within 15 minutes.")
           }
         }
       )

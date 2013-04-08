@@ -9,6 +9,9 @@
     @flash.get("success").map { msg =>
         <p class="text-success">@msg</p>
     }
+    @flash.get("error").map { msg =>
+        <p class="text-error">@msg</p>
+    }
 
     <form action="@routes.Settings.feedNew" method="post" class="register form-inline">
         <div>
