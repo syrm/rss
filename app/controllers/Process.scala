@@ -94,7 +94,7 @@ object Process extends Controller {
             }
           }
 
-          val content = Jsoup.clean(preContent.html(), whitelist).replaceAll("<([^> ]+)( class=[^>]+)?></\\1>", "")
+          val content = Jsoup.clean(preContent.html(), whitelist).replaceAll("<([^> ]+)( class=[^>]+)?>[\r\n\t ]*</\\1>", "")
 
           Item.createOrUpdate(new Item(NotAssigned, title, url, content, date, feed.id.get, guid))
         } catch {
