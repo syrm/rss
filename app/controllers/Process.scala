@@ -10,7 +10,7 @@ import org.jsoup.Jsoup
 import org.jsoup.safety.Whitelist
 import play.api._
 import play.api.mvc._
-import scala.xml.{XML => XML2}
+import scala.collection.JavaConversions._
 
 import models._
 import parsers._
@@ -57,7 +57,7 @@ object Process extends Controller {
 
   def process(feed: Feed, force: Boolean = false): Int = {
     var newArticle: Int = 0
-    val rss = XML2.load(feed.url)
+    val rss = scala.xml.XML.load(feed.url)
     val parser = Parser(feed.name)
 
     val simpleDateFormat = new SimpleDateFormat(parser.dateFormat, Locale.US)
@@ -87,7 +87,14 @@ object Process extends Controller {
 
         try {
           val page = Jsoup.connect(url).header("User-Agent", "Mozilla/5.0").get()
-          val content = Jsoup.clean(parser.getContent(item, page), whitelist).replaceAll("<([^> ]+)( class=[^>]+)?></\\1>", "")
+          val preContent = Jsoup.parse(parser.getContent(item, page))
+          for (element <- preContent.select("iframe")) {
+            if (new URL(element.attr("src")).getHost() != "www.youtube.com") {
+              element.remove()
+            }
+          }
+
+          val content = Jsoup.clean(preContent.html(), whitelist).replaceAll("<([^> ]+)( class=[^>]+)?></\\1>", "")
 
           Item.createOrUpdate(new Item(NotAssigned, title, url, content, date, feed.id.get, guid))
         } catch {
