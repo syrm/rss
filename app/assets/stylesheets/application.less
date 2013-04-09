@@ -270,13 +270,47 @@ aside {
 }
 
 @media (max-width: 767px) {
+  body {
+    padding-left: 5px;
+    padding-right: 5px;
+  }
+
+  .navbar {
+    margin-bottom: 10px;
+    margin-left: -5px;
+    margin-right: -5px;
+
+    .brand {
+      padding: 0;
+    }
+
+    .nav > li > a {
+      padding: 2px 5px 0px;
+    }
+
+    .navbar-inner {
+      padding-left: 10px;
+      min-height: auto;
+    }
+  }
+
   aside {
     position: static;
-    height: 150px;
+
+    .feeds {
+      display: none;
+    }
+
+    .items {
+      position: static;
+      height: 110px;
+      padding-top: 0px;
+    }
   }
 
   section.article {
-    margin-top: 20px;
+    margin-top: 10px;
     margin-left: 0;
+    margin-bottom: 5px;
   }
 }
