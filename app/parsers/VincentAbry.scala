@@ -27,10 +27,10 @@ class VincentAbry extends Default {
         content.select("div#comments").remove()
         content.select("div.commentlist").remove()
         content.select("div.navigation").remove()
-        content.select("iframe:last-of-type").remove()
         content.select("div#wp_rp_first").remove()
         content.select("br:last-of-type").remove()
         content.select("br:last-of-type").remove()
+        content.select("iframe[src*=listType=playlist]").remove()
 
         content.html()
       }
