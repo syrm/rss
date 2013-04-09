@@ -32,8 +32,14 @@ jQuery ->
   $(window).on 'keypress', (event)->
     key = String.fromCharCode(event.which)
     switch key
-      when 'j' then $('.items').find('.selected').next().trigger('click')
-      when 'k' then $('.items').find('.selected'). prev().trigger('click')
+      when 'j'
+        $('.items').find('.selected').next().trigger('click')
+        if $(".items").position().top + $('.items').find('.selected').position().top + $('.items').find('.selected').height() > $(window).height()
+          $('.items').scrollTo $('.items').find('.selected'), 500
+      when 'k'
+        $('.items').find('.selected').prev().trigger('click')
+        if $('.items').find('.selected').position().top < 0
+          $('.items').scrollTo $('.items').find('.selected'), 100
 
   $('.items').on
     click: (event)->
