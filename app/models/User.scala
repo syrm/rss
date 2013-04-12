@@ -15,7 +15,8 @@ case class User(
   password:   String,
   salt:       String,
   permission: Permission = Permission.valueOf("NormalUser"),
-  date:       Date = new Date
+  date:       Date = new Date,
+  token:      Option[String]
 ) {
   override def toString() = "User#" + id
 }
@@ -36,8 +37,9 @@ object User {
     get[String]("user.password") ~
     get[String]("user.salt") ~
     get[String]("user.permission") ~
-    get[Date]("user.date") map {
-      case id ~ name ~ email ~ password ~ salt ~ permission ~ date => User(id, name, email, password, salt, Permission.valueOf(permission), date)
+    get[Date]("user.date") ~
+    get[Option[String]]("user.token") map {
+      case id ~ name ~ email ~ password ~ salt ~ permission ~ date ~ token => User(id, name, email, password, salt, Permission.valueOf(permission), date, token)
     }
   }
 
@@ -70,6 +72,21 @@ object User {
         'name -> name).as(User.simple.singleOpt)
     }
   }
+
+
+  /**
+   * Retrieve an User from token.
+   */
+  def getByToken(token: String): Option[User] = {
+    DB.withConnection { implicit connection =>
+      SQL("""
+          select * from user
+          where token = {token}
+        """).on(
+        'token -> token).as(User.simple.singleOpt)
+    }
+  }
+
 
   /**
    * Create an User.

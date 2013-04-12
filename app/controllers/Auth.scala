@@ -50,7 +50,7 @@ object Auth extends Controller with LoginLogout with AuthConfig {
         case (username, password, email) => {
           val salt = java.util.UUID.randomUUID().toString().replaceAll("-", "")
           val passwordCrypted = User.encryptPassword(password, salt)
-          User.create(new User(NotAssigned, username, email, passwordCrypted, salt))
+          User.create(new User(NotAssigned, username, email, passwordCrypted, salt, token = None))
           Redirect(routes.Application.index).withSession(Security.username -> username)
         }
       })

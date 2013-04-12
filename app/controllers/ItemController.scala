@@ -46,7 +46,7 @@ object ItemController extends Controller with AuthElement with AuthConfig {
 
           Ok(json)
         }
-        case None => Ok(Json.obj("stauts" -> "ko"))
+        case None => Ok(Json.obj("status" -> "ko"))
       }
   }
 
