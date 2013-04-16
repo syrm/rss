@@ -1,4 +1,4 @@
-@(feed: Option[Feed], feeds: Seq[Feed], items: List[(Item, Feed, Option[Read], Option[Bookmark])])(implicit request: play.api.mvc.Request[Any], user: Option[User])
+@(selection: String, feed: Option[Feed], feeds: Seq[Feed], items: List[(Item, Feed, Option[Read], Option[Bookmark])])(implicit request: play.api.mvc.Request[Any], user: Option[User])
 
 @styles = {
     <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/application.css")">
@@ -9,15 +9,24 @@
     <div class="feeds dropdown">
         <a class="dropdown-toggle" data-toggle="dropdown" href="#">
             @feed match {
-                case None       => { <i class="icon-hdd"></i> All }
                 case Some(feed) => { <img title="@feed.name" class="icon" src="@feed.favicon" /> @feed.name @if(feed.unread > 0) {<span class="unread">@feed.unread</span>} }
+                case None => {
+                    @selection match {
+                        case "all"      => { <i class="icon-hdd"></i> All }
+                        case "starred"  => { <i class="icon-star"></i> Starred }
+                    }
+                }
             }
         <b class="caret"></b></a>
         <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-            @if(feed != None) {
+            @if(selection != "all") {
                 <li><a class="menuitem" href="@routes.Application.index"><i class="icon-hdd"></i> All</a></li>
-                <li class="divider"></li>
             }
+            @if(selection != "starred") {
+                <li><a class="menuitem" href="@routes.Application.starred"><i class="icon-star"></i> Starred</a></li>
+            }
+            <li class="divider"></li>
+
             @for(f <- feeds) {
                 @if(feed == None || f.id != feed.get.id) {
                     <li id="feed_@f.id"><a class="menuitem" href="@routes.Application.feed(f.id.get)"><img title="@f.name" class="icon" src="@f.favicon" /> @f.name @if(f.unread > 0) {<span class="unread">@f.unread</span>}</a></li>

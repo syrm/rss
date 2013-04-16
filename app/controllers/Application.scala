@@ -23,7 +23,7 @@ object Application extends Controller with AuthElement with AuthConfig {
       if (feeds.length == 0) {
         Ok(views.html.application.welcome())
       } else {
-        Ok(views.html.application.index(None, feeds, items))
+        Ok(views.html.application.index("all", None, feeds, items))
       }
   }
 
@@ -37,7 +37,22 @@ object Application extends Controller with AuthElement with AuthConfig {
       val feeds = Feed.getAllForUser(user)
       val items = Item.getAllFromFeedForUser(id, user)
 
-      Ok(views.html.application.index(feed, feeds, items))
+      feed match {
+        case None => Ok(views.html.application.index("all", None, feeds, items))
+        case feed => Ok(views.html.application.index("feed", feed, feeds, items))
+      }
+  }
+
+
+  def starred = authorizedAction(NormalUser) { user =>
+    implicit request =>
+
+      implicit val optionalUser = Option(user)
+
+      val feeds = Feed.getAllForUser(user)
+      val items = Item.getAllStarredForUser(user)
+
+      Ok(views.html.application.index("starred", None, feeds, items))
   }
 
 }

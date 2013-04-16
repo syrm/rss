@@ -15,8 +15,9 @@ POST    /register                           controllers.Auth.create
 GET     /login                              controllers.Auth.login
 POST    /login                              controllers.Auth.authenticate
 GET     /logout                             controllers.Auth.logout
-GET     /feed/:id                           controllers.Application.feed(id: Long)
 GET     /v1/items.json                      controllers.api.ItemController.get
+GET     /feed/:id                           controllers.Application.feed(id: Long)
+GET     /starred                            controllers.Application.starred
 GET     /                                   controllers.Application.index
 
 # Map static resources from the /public folder to the /assets URL path

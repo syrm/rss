@@ -114,6 +114,24 @@ object Item {
   }
 
   /**
+   * Retrieve all starred Item for User.
+   */
+  def getAllStarredForUser(user: User): List[(Item, Feed, Option[Read], Option[Bookmark])] = {
+    DB.withConnection { implicit connection =>
+      SQL("""
+            select * from item
+            inner join feed on feed.id = item.feed_id
+            inner join subscription on subscription.feed_id = item.feed_id
+            left join `read` on read.item_id = item.id and read.user_id = {userId}
+            inner join bookmark on bookmark.item_id = item.id and bookmark.user_id = {userId}
+            where subscription.user_id = {userId}
+            order by IF(read.item_id IS NULL, 0, 1), item.date desc
+            limit 100
+        """).on('userId -> user.id).as(Item.withFeedAndReadAndBookmark *)
+    }
+  }
+
+  /**
    * Retrieve an Item by guid for a Feed.
    */
   def getByGuidForFeed(feedId: Long, guid: String): Option[Item] = {
