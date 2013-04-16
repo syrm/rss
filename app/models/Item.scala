@@ -114,15 +114,16 @@ object Item {
   }
 
   /**
-   * Retrieve an Item from url.
+   * Retrieve an Item by guid for a Feed.
    */
-  def getByUrl(url: String): Option[Item] = {
+  def getByGuidForFeed(feedId: Long, guid: String): Option[Item] = {
     DB.withConnection { implicit connection =>
       SQL("""
             select * from item
-            where url = {url}
+            where feed_id = {feedId} and guid = {guid}
         """).on(
-        'url -> url).as(Item.simple.singleOpt)
+        'feedId -> feedId,
+        'guid -> guid).as(Item.simple.singleOpt)
     }
   }
 

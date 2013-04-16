@@ -67,9 +67,7 @@ object Process extends Controller {
       val url   = (item \ "link").text
       val guid  = (item \ "guid").text
 
-      println(url)
-
-      val itemDb = Item.getByUrl(url)
+      val itemDb = Item.getByGuidForFeed(feed.id.get, guid)
 
       if (itemDb == None || force == true) {
         newArticle = newArticle+1
@@ -94,8 +92,8 @@ object Process extends Controller {
             }
           }
 
-          val content = Jsoup.clean(preContent.html(), whitelist).replaceAll("<([^> ]+)( class=[^>]+)?>[\r\n\t ]*</\\1>", "")
-
+          val javaUrl = new URL(url)
+          val content = Jsoup.clean(preContent.html(), javaUrl.getProtocol() + "://" + javaUrl.getHost(), whitelist).replaceAll("<([^> ]+)( class=[^>]+)?>[\r\n\t ]*</\\1>", "")
           Item.createOrUpdate(new Item(NotAssigned, title, url, content, date, feed.id.get, guid))
         } catch {
           case e: HttpStatusException => println("Error (" + e.getStatusCode() + ") " + e.getUrl())
