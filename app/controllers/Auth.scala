@@ -31,7 +31,10 @@ object Auth extends Controller with LoginLogout with AuthConfig {
     loginForm.bindFromRequest.fold(
       formWithErrors => BadRequest(views.html.auth.login(formWithErrors)),
       {
-        case (user) => gotoLoginSucceeded(user.get.name)
+        case (user) => {
+          User.updateDateLogin(user.get.id.get)
+          gotoLoginSucceeded(user.get.name)
+        }
       })
   }
 
