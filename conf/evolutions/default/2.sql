@@ -2,7 +2,7 @@
 
 # --- !Ups
 
-ALTER TABLE user ADD date_login timestamp DEFAULT current_timestamp;
+ALTER TABLE user ADD date_login timestamp;
 UPDATE user SET date_login=date;
 
 # --- !Downs
