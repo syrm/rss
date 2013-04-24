@@ -155,8 +155,8 @@ object Item {
             insert into item
             (id, title, url, content, date, feed_id, guid)
             values
-            ({id}, {title}, {url}, {content}, {date}, {feedId}, {guid})
-            on duplicate key update title = {title}, content = {content}, date = {date}, guid = {guid}
+            ({id}, {title}, {url}, {content}, {date}, {feedId}, md5({guid}))
+            on duplicate key update title = {title}, content = {content}, date = {date}
         """).on(
         'id      -> item.id,
         'title   -> item.title,
