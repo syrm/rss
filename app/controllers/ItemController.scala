@@ -32,7 +32,8 @@ object ItemController extends Controller with AuthElement with AuthConfig {
                 "id"      -> item.id.get,
                 "title"   -> item.title,
                 "url"     -> item.url,
-                "content" -> item.content
+                "content" -> item.content,
+                "date"    -> item.cleanDate
               ),
             "feed" ->
               Json.obj(

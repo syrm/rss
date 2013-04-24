@@ -1,5 +1,6 @@
 jQuery ->
   $('.dropdown-toggle').dropdown()
+  $('.tools .info').popover({html: true, placement: 'bottom'})
 
   if (typeof document.hidden != "undefined")
     document.visibilityChange = "visibilitychange";
@@ -61,6 +62,8 @@ jQuery ->
             .attr("href", data.item.url)
             .html(data.item.title)
 
+          $('section.article .info').data('popover').options.content = "<i class='icon-time'></i> " + data.item.date
+
           if (data.bookmark == true)
             $('section.article .title .tools .star').eq(0)
               .attr('href', '/item/' + data.item.id + '/unstar')
@@ -80,3 +83,9 @@ jQuery ->
     event.preventDefault()
     $.get $(event.target).parent().attr('href')
     switchStar(event.target)
+
+  $(document).on 'click', (event)->
+    className = $(event.target).attr("class")
+    if (className != "popover-content" && className != "icon-info-sign")
+      $('.tools .info').popover("hide")
+

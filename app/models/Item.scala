@@ -2,7 +2,9 @@ package models
 
 import anorm._
 import anorm.SqlParser._
+import java.text.SimpleDateFormat
 import java.util.Date
+import java.util.TimeZone
 import play.api.db._
 import play.api.Play.current
 import scala.language.postfixOps
@@ -18,6 +20,24 @@ case class Item(
 ) {
 
   override def toString() = "Item#" + id
+
+  def cleanDate = {
+    date match {
+      case Some(date) => {
+        val simpleFormatHour = new SimpleDateFormat("kms")
+        val onlyTime = simpleFormatHour.format(date)
+
+        if (onlyTime == "000" || onlyTime == "100" || onlyTime == "200") {
+          val simpleFormat = new SimpleDateFormat("'Le' dd/MM/yyyy")
+          simpleFormat.format(date)
+        } else {
+          val simpleFormat = new SimpleDateFormat("'Le' dd/MM/yyyy 'à' kk'h'mm")
+          simpleFormat.format(date)
+        }
+      }
+      case None => "Unknown"
+    }
+  }
 }
 
 object Item {
