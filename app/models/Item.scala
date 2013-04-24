@@ -138,7 +138,7 @@ object Item {
     DB.withConnection { implicit connection =>
       SQL("""
             select * from item
-            where feed_id = {feedId} and guid = {guid}
+            where feed_id = {feedId} and guid = md5({guid})
         """).on(
         'feedId -> feedId,
         'guid -> guid).as(Item.simple.singleOpt)
