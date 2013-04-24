@@ -9,7 +9,7 @@
     <div class="feeds dropdown">
         <a class="dropdown-toggle" data-toggle="dropdown" href="#">
             @feed match {
-                case Some(feed) => { <img title="@feed.name" class="icon" src="@feed.favicon" /> @feed.name @if(feed.unread > 0) {<span class="unread">@feed.unread</span>} }
+                case Some(feed) => { <img title="@feed.name" class="icon" src="@feed.favicon" /> <span class="name">@feed.name</span> @if(feed.unread > 0) {<span class="unread">@feed.unread</span>} }
                 case None => {
                     @selection match {
                         case "all"      => { <i class="icon-hdd"></i> All }
@@ -29,7 +29,7 @@
 
             @for(f <- feeds) {
                 @if(feed == None || f.id != feed.get.id) {
-                    <li id="feed_@f.id"><a class="menuitem" href="@routes.Application.feed(f.id.get)"><img title="@f.name" class="icon" src="@f.favicon" /> @f.name @if(f.unread > 0) {<span class="unread">@f.unread</span>}</a></li>
+                    <li id="feed_@f.id"><a class="menuitem" href="@routes.Application.feed(f.id.get)"><img title="@f.name" class="icon" src="@f.favicon" /> <span class="name">@f.name</span> @if(f.unread > 0) {<span class="unread">@f.unread</span>}</a></li>
                 }
             }
         </ul>

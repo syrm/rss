@@ -107,6 +107,14 @@ aside {
     border: 1px solid #d4d4d4;
     box-shadow: 0 1px 10px rgba(0, 0, 0, 0.1);
 
+    .name {
+      width: 295px;
+      display: inline-block;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+
     .dropdown-toggle {
       display: inline-block;
       width: inherit;
@@ -148,6 +156,7 @@ aside {
 
       li {
         width: inherit;
+        position: relative;
 
         a  {
           display: inline-block;
@@ -166,7 +175,9 @@ aside {
           }
 
           .unread {
-            float: right;
+            position: absolute;
+            top: 6px;
+            right: 15px;
           }
         }
 
@@ -254,6 +265,10 @@ aside {
 }
 
 @media (max-width: 1200px) {
+  aside .feeds .name {
+    width: 225px;
+  }
+
   section.article {
     margin-left: 350px;
   }
@@ -262,6 +277,10 @@ aside {
 @media (min-width: 768px) and (max-width: 979px) {
   aside {
     top: 73px;
+
+    .feeds .name {
+      width: 153px;
+    }
   }
 
   section.article {
