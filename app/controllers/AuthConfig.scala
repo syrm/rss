@@ -14,7 +14,7 @@ trait AuthConfig extends play2AuthConfig {
   type Authority = Permission
 
   val idTag = classTag[Id]
-  val sessionTimeoutInSeconds: Int = 3600
+  val sessionTimeoutInSeconds: Int = 25200
 
   override lazy val idContainer: IdContainer[Id] = new CookieIdContainer[Id]
 
