@@ -93,23 +93,28 @@ object User {
   /**
    * Create an User.
    */
-  def create(user: User): User = {
+  def create(user: User): Option[User] = {
     DB.withConnection { implicit connection =>
-      val id: Option[Long] = SQL("""
-          insert into user (
-              name, email, password, salt, date, date_login
-            ) values (
-              {name}, {email}, {password}, {salt}, {date}, {dateLogin}
-            )
-        """).on(
-        'name      -> user.name,
-        'email     -> user.email,
-        'password  -> user.password,
-        'salt      -> user.salt,
-        'date      -> user.date,
-        'dateLogin -> user.dateLogin).executeInsert()
+      try {
+        val id: Option[Long] = SQL("""
+            insert into user (
+                name, email, password, salt, date, date_login
+              ) values (
+                {name}, {email}, {password}, {salt}, {date}, {dateLogin}
+              )
+          """).on(
+          'name      -> user.name,
+          'email     -> user.email,
+          'password  -> user.password,
+          'salt      -> user.salt,
+          'date      -> user.date,
+          'dateLogin -> user.dateLogin).executeInsert()
 
-      user.copy(id = Id(id.get))
+        user.copy(id = Id(id.get))
+        Option(user)
+      } catch {
+        case e: Throwable => None
+      }
     }
   }
 

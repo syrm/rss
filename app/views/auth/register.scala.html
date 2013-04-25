@@ -8,6 +8,12 @@
                 <fieldset>
                     <legend>Sign Up</legend>
 
+                    @form.error("name/email").map { error =>
+                    <div class="control-group large">
+                        <span class="help-block error">@error.message</span>
+                    </div>
+                    }
+
                     <div class="control-group">
                         <label class="control-label" for="username">Username</label>
                         <div class="controls">

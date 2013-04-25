@@ -1,6 +1,7 @@
 package controllers
 
 import anorm._
+import com.mysql.jdbc.exceptions._
 import jp.t2v.lab.play2.auth._
 import models._
 import play.api._
@@ -53,8 +54,10 @@ object Auth extends Controller with LoginLogout with AuthConfig {
         case (username, password, email) => {
           val salt = java.util.UUID.randomUUID().toString().replaceAll("-", "")
           val passwordCrypted = User.encryptPassword(password, salt)
-          User.create(new User(NotAssigned, username, email, passwordCrypted, salt, token = None))
-          Redirect(routes.Application.index).withSession(Security.username -> username)
+          User.create(new User(NotAssigned, username, email, passwordCrypted, salt, token = None)) match {
+            case Some(user) => gotoLoginSucceeded(username)
+            case None => BadRequest(views.html.auth.register(registerForm.copy(errors = Seq(FormError("name/email", "Already registered")))))
+          }
         }
       })
   }
