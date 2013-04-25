@@ -1,6 +1,7 @@
 package controllers
 
 import anorm._
+import java.net._
 import java.util.Date
 import jp.t2v.lab.play2.auth._
 import models._
@@ -40,7 +41,7 @@ object Settings extends Controller with AuthElement with AuthConfig {
               val rss   = XML2.load(url)
               val name = (rss \ "channel" \ "title").text
               val site  = (rss \ "channel" \ "link").text
-              val favicon = if (site != "") {
+              val favicon = (if (site != "") {
                   try {
                     val page = Jsoup.connect(site).header("User-Agent", "Mozilla/5.0").get()
                     page.select("link[rel^=shortcut]").first() match {
@@ -63,6 +64,17 @@ object Settings extends Controller with AuthElement with AuthConfig {
                   }
                 } else {
                   None
+                }) match {
+                  case None => None
+                  case Some(favicon) => {
+                    val result = new URL(favicon).openConnection().asInstanceOf[HttpURLConnection].getResponseCode()
+
+                    if (result == 200) {
+                      Option(favicon)
+                    } else {
+                      None
+                    }
+                  }
                 }
 
               val feed = Feed.create(new Feed(NotAssigned, name, site, url, favicon))

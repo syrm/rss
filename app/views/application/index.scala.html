@@ -9,7 +9,11 @@
     <div class="feeds dropdown">
         <a class="dropdown-toggle" data-toggle="dropdown" href="#">
             @feed match {
-                case Some(feed) => { <img title="@feed.name" class="icon" src="@feed.favicon" /> <span class="name">@feed.name</span> @if(feed.unread > 0) {<span class="unread">@feed.unread</span>} }
+                case Some(feed) => {
+                    @if(feed.favicon.isDefined) {
+                        <img title="@feed.name" class="icon" src="@feed.favicon" />
+                    }
+                    <span class="name">@feed.name</span> @if(feed.unread > 0) {<span class="unread">@feed.unread</span>} }
                 case None => {
                     @selection match {
                         case "all"      => { <i class="icon-hdd"></i> All }
@@ -29,7 +33,10 @@
 
             @for(f <- feeds) {
                 @if(feed == None || f.id != feed.get.id) {
-                    <li id="feed_@f.id"><a class="menuitem" href="@routes.Application.feed(f.id.get)"><img title="@f.name" class="icon" src="@f.favicon" /> <span class="name">@f.name</span> @if(f.unread > 0) {<span class="unread">@f.unread</span>}</a></li>
+                    <li id="feed_@f.id"><a class="menuitem" href="@routes.Application.feed(f.id.get)">
+                        <div class="icon" style="background-image: url('@f.favicon')"></div>
+                        <span class="name">@f.name</span> @if(f.unread > 0) {<span class="unread">@f.unread</span>}</a>
+                    </li>
                 }
             }
         </ul>
@@ -37,7 +44,9 @@
     <ul class="items">
     @for((item, itemFeed, itemRead, itemBookmark) <- items) {
         <li id="item_@item.id" class="item @itemRead.map(_ => "read").getOrElse("") @if(item.id == items(0)._1.id) { selected }">
-            <img title="@itemFeed.name" class="icon" src="@itemFeed.favicon" />
+            @if(itemFeed.favicon.isDefined) {
+                <div class="icon" style="background-image: url('@itemFeed.favicon')"></div>
+            }
             @if(item.date == None) { <em class="date">!</em> }
             @item.title
         </li>
@@ -49,7 +58,7 @@
     @items(0) match {
         case (item, feed, read, bookmark) => {
             <div class="title">
-                <h1><img title="@feed.name" class="icon" src="@feed.favicon" /> <a href="@item.url">@item.title</a></h1>
+                <h1><div class="icon" style="background-image: url('@feed.favicon')@if(feed.favicon.isEmpty) { ;display:none }"></div> <a href="@item.url">@item.title</a></h1>
                 <div class="tools">
                     @bookmark match {
                         case None => { <a class="star" href="@routes.ItemController.star(item.id.get)"><i class="icon-star-empty"></i></a> }

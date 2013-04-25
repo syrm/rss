@@ -54,9 +54,14 @@ jQuery ->
           else
             $('#feed_' + data.feed.id + ' .unread').text(data.feed.unread)
 
-          $('section.article .title img').eq(0)
-            .attr('title', data.feed.name)
-            .attr('src', data.feed.favicon)
+
+          if (data.feed.favicon != null)
+            $('section.article .title .icon').eq(0)
+              .css('background-image', 'url("' + data.feed.favicon + '")')
+              .css('display', 'inline-block')
+          else
+            $('section.article .title .icon').eq(0)
+              .css('display', 'none')
 
           $('section.article .title a').eq(0)
             .attr("href", data.item.url)
