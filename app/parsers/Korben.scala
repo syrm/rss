@@ -2,6 +2,7 @@ package parsers
 
 import org.jsoup.nodes._
 import scala.xml.Node
+import scala.collection.JavaConversions._
 
 class Korben extends Default {
 
@@ -14,6 +15,13 @@ class Korben extends Default {
         content.select("div.ribbon").remove()
         content.select("p:last-of-type").remove()
         content.select("div:last-of-type").remove()
+        content.select("br:last-of-type").remove()
+        content.select("p:last-of-type:containsOwn(" + 160.toChar +")").remove()
+
+        for(video <- content.select("iframe")) {
+          video.removeAttr("height").removeAttr("width")
+          video.wrap("<div class='videoWrapper'></div>")
+        }
 
         content.html()
       }
