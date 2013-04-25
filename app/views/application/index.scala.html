@@ -64,7 +64,7 @@
                         case None => { <a class="star" href="@routes.ItemController.star(item.id.get)"><i class="icon-star-empty"></i></a> }
                         case Some(bookmark) => { <a class="star" href="@routes.ItemController.unstar(item.id.get)"><i class="icon-star"></i></a> }
                     }
-                    <a class="info" href="#" data-content="<i class='icon-time'></i> @item.cleanDate"><i class="icon-info-sign"></i></a>
+                    <a class="info" href="#" data-content="<i class='icon-time'></i> @item.cleanDate" data-trigger="hover"><i class="icon-info-sign"></i></a>
                 </div>
             </div>
             <div class="content hyphenate">

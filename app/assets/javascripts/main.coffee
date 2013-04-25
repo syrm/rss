@@ -88,9 +88,3 @@ jQuery ->
     event.preventDefault()
     $.get $(event.target).parent().attr('href')
     switchStar(event.target)
-
-  $(document).on 'click', (event)->
-    className = $(event.target).attr("class")
-    if (className != "popover-content" && className != "icon-info-sign")
-      $('.tools .info').popover("hide")
-
