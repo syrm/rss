@@ -32,7 +32,7 @@ class VincentAbry extends Default {
         content.select("br:last-of-type").remove()
         content.select("iframe[src*=listType=playlist]").remove()
 
-        for(video <- content.select("iframe[src*=www.youtube.com]")) {
+        for(video <- content.select("iframe[src*=www.youtube]")) {
           video.removeAttr("height").removeAttr("width")
           video.removeAttr("class")
           video.wrap("<div class='videoWrapper'><div></div></div>")

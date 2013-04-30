@@ -88,7 +88,7 @@ object Process extends Controller {
           val preContent = Jsoup.parse(parser.getContent(item, page))
           for (element <- preContent.select("iframe")) {
             val host = new URL(element.attr("src")).getHost()
-            if (host != "www.youtube.com" && host != "player.vimeo.com") {
+            if (host != "www.youtube.com" && host != "www.youtube-nocookie.com" && host != "player.vimeo.com") {
               element.remove()
             }
           }
