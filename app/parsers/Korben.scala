@@ -18,11 +18,6 @@ class Korben extends Default {
         content.select("br:last-of-type").remove()
         content.select("p:last-of-type:containsOwn(" + 160.toChar +")").remove()
 
-        for(video <- content.select("iframe")) {
-          video.removeAttr("height").removeAttr("width")
-          video.wrap("<div class='videoWrapper'></div>")
-        }
-
         content.html()
       }
       case null => ""

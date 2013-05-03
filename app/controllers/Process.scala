@@ -86,6 +86,12 @@ object Process extends Controller {
         try {
           val page = Jsoup.connect(url).header("User-Agent", "Mozilla/5.0").get()
           val preContent = Jsoup.parse(parser.getContent(item, page))
+
+          for(video <- preContent.select("iframe")) {
+            video.removeAttr("height").removeAttr("width")
+            video.wrap("<div class='videoWrapper'></div>")
+          }
+
           for (element <- preContent.select("iframe")) {
             val host = new URL(element.attr("src")).getHost()
             if (host != "www.youtube.com" && host != "www.youtube-nocookie.com" && host != "player.vimeo.com") {

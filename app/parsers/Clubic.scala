@@ -108,11 +108,6 @@ class Clubic extends Default {
       video.wrap("<div class='videoWrapper'></div>")
     }
 
-    for(video <- content.select("iframe")) {
-      video.removeAttr("height").removeAttr("width")
-      video.wrap("<div class='videoWrapper'></div>")
-    }
-
     content
   }
 
