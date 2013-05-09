@@ -1,4 +1,4 @@
-# --- Init database schema
+# --- Add column login date
 
 # --- !Ups
 

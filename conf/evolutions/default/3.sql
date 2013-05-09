@@ -1,4 +1,5 @@
-# --- Init database schema
+# --- Increase url size
+# --- Change guid type
 
 # --- !Ups
 
