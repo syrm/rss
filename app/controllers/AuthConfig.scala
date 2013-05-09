@@ -24,11 +24,14 @@ trait AuthConfig extends play2AuthConfig {
   def authenticationFailed(request: RequestHeader) = Redirect(routes.Auth.login)
   def authorizationFailed(request: RequestHeader) = Redirect(routes.Auth.login)
 
-  def authorize(user: User, authority: Authority): Boolean =
+  def authorize(user: User, authority: Authority): Boolean = {
+    User.updateDateAccess(user.id.get)
+
     (user.permission, authority) match {
       case (Administrator, _) => true
       case (NormalUser, NormalUser) => true
       case _ => false
     }
+  }
 
 }
