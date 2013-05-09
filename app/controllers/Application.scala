@@ -17,6 +17,10 @@ object Application extends Controller with AuthElement with AuthConfig {
 
       implicit val optionalUser = Option(user)
 
+      optionalUser match {
+        case Some(user) => User.updateDateAccess(user.id.get)
+      }
+
       val feeds = Feed.getAllForUser(user)
       val items = Item.getAllForUser(user)
 

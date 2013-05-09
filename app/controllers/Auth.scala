@@ -33,7 +33,6 @@ object Auth extends Controller with LoginLogout with AuthConfig {
       formWithErrors => BadRequest(views.html.auth.login(formWithErrors)),
       {
         case (user) => {
-          User.updateDateLogin(user.get.id.get)
           gotoLoginSucceeded(user.get.name)
         }
       })

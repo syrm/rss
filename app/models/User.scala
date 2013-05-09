@@ -16,7 +16,7 @@ case class User(
   salt:       String,
   permission: Permission = Permission.valueOf("NormalUser"),
   date:       Date = new Date,
-  dateLogin:  Date = new Date,
+  dateAccess: Date = new Date,
   token:      Option[String]
 ) {
   override def toString() = "User#" + id
@@ -39,9 +39,9 @@ object User {
     get[String]("user.salt") ~
     get[String]("user.permission") ~
     get[Date]("user.date") ~
-    get[Date]("user.date_login") ~
+    get[Date]("user.date_access") ~
     get[Option[String]]("user.token") map {
-      case id ~ name ~ email ~ password ~ salt ~ permission ~ date ~dateLogin ~ token => User(id, name, email, password, salt, Permission.valueOf(permission), date, dateLogin, token)
+      case id ~ name ~ email ~ password ~ salt ~ permission ~ date ~ dateAccess ~ token => User(id, name, email, password, salt, Permission.valueOf(permission), date, dateAccess, token)
     }
   }
 
@@ -98,17 +98,17 @@ object User {
       try {
         val id: Option[Long] = SQL("""
             insert into user (
-                name, email, password, salt, date, date_login
+                name, email, password, salt, date, date_access
               ) values (
-                {name}, {email}, {password}, {salt}, {date}, {dateLogin}
+                {name}, {email}, {password}, {salt}, {date}, {dateAccess}
               )
           """).on(
-          'name      -> user.name,
-          'email     -> user.email,
-          'password  -> user.password,
-          'salt      -> user.salt,
-          'date      -> user.date,
-          'dateLogin -> user.dateLogin).executeInsert()
+          'name       -> user.name,
+          'email      -> user.email,
+          'password   -> user.password,
+          'salt       -> user.salt,
+          'date       -> user.date,
+          'dateAccess -> user.dateAccess).executeInsert()
 
         user.copy(id = Id(id.get))
         Option(user)
@@ -119,11 +119,11 @@ object User {
   }
 
   /**
-   * Update date login.
+   * Update date access.
    */
-  def updateDateLogin(id: Long) {
+  def updateDateAccess(id: Long) {
     DB.withConnection { implicit connection =>
-      SQL("update user set date_login = CURRENT_TIMESTAMP where id = {id}").on(
+      SQL("update user set date_access = CURRENT_TIMESTAMP where id = {id}").on(
         'id -> id).executeUpdate()
     }
   }
