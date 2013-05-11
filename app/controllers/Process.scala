@@ -34,7 +34,7 @@ object Process extends Controller {
     val feeds = Feed.getAll
 
     for (feed <- feeds) {
-      println(feed)
+      print(feed)
       newArticle += process(feed)
     }
 
@@ -56,57 +56,64 @@ object Process extends Controller {
 
 
   def process(feed: Feed, force: Boolean = false): Int = {
-    var newArticle: Int = 0
-    val rss = scala.xml.XML.load(feed.url)
-    val parser = Parser(feed.name)
+    var newArticle = 0
 
-    val simpleDateFormat = new SimpleDateFormat(parser.dateFormat, Locale.US)
+    try {
+      val rss = scala.xml.XML.load(feed.url)
+      val parser = Parser(feed.name)
 
-    for (item <- rss \\ "item") {
-      val title = (item \ "title").text
-      val url   = (item \ "link").text
-      val guid  = (item \ "guid").text
+      val simpleDateFormat = new SimpleDateFormat(parser.dateFormat, Locale.US)
 
-      val itemDb = Item.getByGuidForFeed(feed.id.get, guid)
+      for (item <- rss \\ "item") {
+        val title = (item \ "title").text
+        val url   = (item \ "link").text
+        val guid  = (item \ "guid").text
 
-      if (itemDb == None || force == true) {
-        newArticle = newArticle+1
+        val itemDb = Item.getByGuidForFeed(feed.id.get, guid)
 
-        val date = parser.getDate(item)
+        if (itemDb == None || force == true) {
+          newArticle = newArticle+1
 
-        val whitelist = Whitelist.basicWithImages()
-        whitelist.addAttributes(":all", "width", "height")
-        whitelist.addAttributes("iframe", "src")
-        whitelist.addAttributes("embed", "type", "src", "allowfullscreen", "allowscriptaccess", "flashvars")
-        whitelist.addAttributes("param", "name", "value")
-        whitelist.addAttributes("object", "data")
-        whitelist.addAttributes("div", "class")
-        whitelist.addTags("div", "iframe", "object", "param", "embed", "section", "aside", "h1", "h2", "h3", "h4", "h5", "h6")
+          val date = parser.getDate(item)
 
-        try {
-          val page = Jsoup.connect(url).header("User-Agent", "Mozilla/5.0").get()
-          val preContent = Jsoup.parse(parser.getContent(item, page))
+          val whitelist = Whitelist.basicWithImages()
+          whitelist.addAttributes(":all", "width", "height")
+          whitelist.addAttributes("iframe", "src")
+          whitelist.addAttributes("embed", "type", "src", "allowfullscreen", "allowscriptaccess", "flashvars")
+          whitelist.addAttributes("param", "name", "value")
+          whitelist.addAttributes("object", "data")
+          whitelist.addAttributes("div", "class")
+          whitelist.addTags("div", "iframe", "object", "param", "embed", "section", "aside", "h1", "h2", "h3", "h4", "h5", "h6")
 
-          for(video <- preContent.select("iframe")) {
-            video.removeAttr("height").removeAttr("width")
-            video.wrap("<div class='videoWrapper'></div>")
-          }
+          try {
+            val page = Jsoup.connect(url).header("User-Agent", "Mozilla/5.0").get()
+            val preContent = Jsoup.parse(parser.getContent(item, page))
 
-          for (element <- preContent.select("iframe")) {
-            val host = new URL(element.attr("src")).getHost()
-            if (host != "www.youtube.com" && host != "www.youtube-nocookie.com" && host != "player.vimeo.com") {
-              element.remove()
+            for(video <- preContent.select("iframe")) {
+              video.removeAttr("height").removeAttr("width")
+              video.wrap("<div class='videoWrapper'></div>")
             }
-          }
 
-          val javaUrl = new URL(url)
-          val content = Jsoup.clean(preContent.html(), javaUrl.getProtocol() + "://" + javaUrl.getHost(), whitelist).replaceAll("<([^> ]+)( class=[^>]+)?>[\r\n\t ]*</\\1>", "")
-          Item.createOrUpdate(new Item(NotAssigned, title, url, content, date, feed.id.get, guid))
-        } catch {
-          case e: HttpStatusException => println("Error (" + e.getStatusCode() + ") " + e.getUrl())
-          case e: Throwable => println("Error (" + e.getClass +") " + url)
+            for (element <- preContent.select("iframe")) {
+              val host = new URL(element.attr("src")).getHost()
+              if (host != "www.youtube.com" && host != "www.youtube-nocookie.com" && host != "player.vimeo.com") {
+                element.remove()
+              }
+            }
+
+            val javaUrl = new URL(url)
+            val content = Jsoup.clean(preContent.html(), javaUrl.getProtocol() + "://" + javaUrl.getHost(), whitelist).replaceAll("<([^> ]+)( class=[^>]+)?>[\r\n\t ]*</\\1>", "")
+            Item.createOrUpdate(new Item(NotAssigned, title, url, content, date, feed.id.get, guid))
+          } catch {
+            case e: HttpStatusException => println("Error (" + e.getStatusCode() + ") " + e.getUrl())
+            case e: Throwable => println("Error (" + e.getClass +") " + url)
+          }
         }
       }
+
+      println("")
+    } catch {
+      case e: Throwable => println(": KO")
     }
 
     newArticle
