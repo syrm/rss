@@ -23,6 +23,7 @@ class VincentAbry extends Default {
 
         content.select("[class^=pub-]").remove()
         content.select("div.meta-single").remove()
+        content.select("div#respond + iframe").remove()
         content.select("div#respond").remove()
         content.select("div#comments").remove()
         content.select("div.commentlist").remove()
@@ -30,8 +31,6 @@ class VincentAbry extends Default {
         content.select("div#wp_rp_first").remove()
         content.select("br:last-of-type").remove()
         content.select("br:last-of-type").remove()
-        content.select("iframe[src*=listType=playlist]").remove()
-
         content.html()
       }
       case null => ""
