@@ -23,7 +23,7 @@ class VincentAbry extends Default {
 
         content.select("[class^=pub-]").remove()
         content.select("div.meta-single").remove()
-        content.select("div#respond + iframe").remove()
+        content.select("div#respond ~ iframe").remove()
         content.select("div#respond").remove()
         content.select("div#comments").remove()
         content.select("div.commentlist").remove()
