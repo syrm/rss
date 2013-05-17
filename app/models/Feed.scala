@@ -3,6 +3,7 @@ package models
 import anorm._
 import anorm.SqlParser._
 import com.mysql.jdbc.exceptions.jdbc4._
+import java.util.Date
 import play.api.db._
 import play.api.Play.current
 import scala.language.postfixOps
@@ -12,7 +13,8 @@ case class Feed(
   name: String,
   site: String,
   url:  String,
-  favicon: Option[String]) {
+  favicon: Option[String],
+  lastUpdate: Option[Date]) {
 
   var unread: Long = 0
 
@@ -31,8 +33,9 @@ object Feed {
     get[String]("feed.name") ~
     get[String]("feed.site") ~
     get[String]("feed.url") ~
-    get[Option[String]]("feed.favicon") map {
-        case id ~ name ~ site ~ url ~ favicon => Feed(id, name, site, url, favicon)
+    get[Option[String]]("feed.favicon") ~
+    get[Option[Date]]("feed.last_update") map {
+        case id ~ name ~ site ~ url ~ favicon ~ last_update => Feed(id, name, site, url, favicon, last_update)
       }
   }
 

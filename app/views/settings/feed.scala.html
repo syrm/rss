@@ -25,6 +25,7 @@
             <tr>
                 <th>Name</th>
                 <th>Feed URL</th>
+                <th>Last Update</th>
                 <th>&nbsp;</th>
             </tr>
         </thead>
@@ -33,6 +34,12 @@
             <tr>
                 <td>@feed.name</td>
                 <td>@feed.url</td>
+                <td>
+                @feed.lastUpdate match {
+                    case None => { - }
+                    case Some(date) => { @date.format("yyyy-MM-d HH:m") }
+                }
+                </td>
                 <td><a href="@routes.Settings.feedUnsubscribe(feed.id.get)"><i class="icon-trash"></i></a></td>
             </tr>
             }

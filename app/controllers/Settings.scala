@@ -77,7 +77,7 @@ object Settings extends Controller with AuthElement with AuthConfig {
                   }
                 }
 
-              val feed = Feed.create(new Feed(NotAssigned, name, site, url, favicon))
+              val feed = Feed.create(new Feed(NotAssigned, name, site, url, favicon, None))
               Subscription.create(new Subscription(user.id.get, feed.id.get, new Date()))
 
               Redirect(routes.Settings.feed).flashing("success" -> "Feed will be available within 15 minutes.")
