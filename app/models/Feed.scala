@@ -137,4 +137,24 @@ object Feed {
     }
   }
 
+  /**
+   * Update last update.
+   */
+  def updateLastUpdate(id: Long) {
+    DB.withConnection { implicit connection =>
+      SQL("update feed set last_update = CURRENT_TIMESTAMP where id = {id}").on(
+        'id -> id).executeUpdate()
+    }
+  }
+
+  /**
+   * Update last error.
+   */
+  def updateLastError(id: Long, error: String) {
+    DB.withConnection { implicit connection =>
+      SQL("update feed set last_error = {error} where id = {id}").on(
+        'id -> id, 'error -> error).executeUpdate()
+    }
+  }
+
 }

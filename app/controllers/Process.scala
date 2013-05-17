@@ -59,7 +59,8 @@ object Process extends Controller {
     var newArticle = 0
 
     try {
-      val rss = scala.xml.XML.load(feed.url)
+      val src = scala.io.Source.fromURL(feed.url)
+      val rss = scala.xml.parsing.ConstructingParser.fromSource(src, false).document()
       val parser = Parser(feed.name)
 
       val simpleDateFormat = new SimpleDateFormat(parser.dateFormat, Locale.US)
@@ -112,8 +113,12 @@ object Process extends Controller {
       }
 
       println("")
+      Feed.updateLastUpdate(feed.id.get)
     } catch {
-      case e: Throwable => println(": KO")
+      case e: Throwable => {
+        Feed.updateLastError(feed.id.get, e.toString())
+        println(": KO")
+      }
     }
 
     newArticle
