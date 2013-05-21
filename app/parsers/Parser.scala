@@ -27,6 +27,7 @@ object Parser {
       case "NowhereElse"        => new NowhereElse
       case "Vincent Abry"       => new VincentAbry
       case "La Ferme du web"    => new LaFermeduweb
+      case "Anis Berejeb"       => new AnisBerejeb
       case _                    => new Default
     }
   }
