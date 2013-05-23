@@ -53,7 +53,13 @@ object Settings extends Controller with AuthElement with AuthConfig {
                   (xmlFeed \ "channel" \ "title").text
                 }
               val site = if (feedKind == FeedAtom) {
-                  (xmlFeed \ "link").text
+                  val node = xmlFeed \ "link"
+
+                  if (node.length > 0) {
+                    (node(0) \ "@href").text
+                  } else {
+                    ""
+                  }
                 } else {
                   (xmlFeed \ "channel" \ "link").text
                 }
