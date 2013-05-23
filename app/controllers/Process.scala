@@ -65,17 +65,45 @@ object Process extends Controller {
 
       val simpleDateFormat = new SimpleDateFormat(parser.dateFormat, Locale.US)
 
-      for (item <- rss \\ "item") {
+      val idNode = if (feed.kind == FeedRss) {
+          "guid"
+        } else {
+          "id"
+        }
+
+      val itemNode = if (feed.kind == FeedRss) {
+          "item"
+        } else {
+          "entry"
+        }
+
+      val dateNode = if (feed.kind == FeedRss) {
+          "pubDate"
+        } else {
+          "published"
+        }
+
+      val contentNode = if (feed.kind == FeedRss) {
+          "description"
+        } else {
+          "content"
+        }
+
+      for (item <- rss \\ itemNode) {
         val title = (item \ "title").text
-        val url   = (item \ "link").text
-        val guid  = (item \ "guid").text
+        val url   = if (feed.kind == FeedRss) {
+            (item \ "link").text
+          } else {
+            (item \ "link" \ "@href").text
+          }
+        val guid  = (item \ idNode).text
 
         val itemDb = Item.getByGuidForFeed(feed.id.get, guid)
 
         if (itemDb == None || force == true) {
           newArticle = newArticle+1
 
-          val date = parser.getDate(item)
+          val date = parser.getDate((item \ dateNode).text)
 
           val whitelist = Whitelist.basicWithImages()
           whitelist.addAttributes(":all", "width", "height")
@@ -87,8 +115,13 @@ object Process extends Controller {
           whitelist.addTags("div", "iframe", "object", "param", "embed", "section", "aside", "h1", "h2", "h3", "h4", "h5", "h6")
 
           try {
-            val page = Jsoup.connect(url).header("User-Agent", "Mozilla/5.0").get()
-            val preContent = Jsoup.parse(parser.getContent(item, page))
+            val preContent = if (parser.hasFullContent) {
+                val page = Jsoup.connect(url).header("User-Agent", "Mozilla/5.0").get()
+                Jsoup.parse(parser.getContent(item, page))
+              } else {
+                Jsoup.parse((item \ contentNode).text)
+              }
+
 
             for(video <- preContent.select("iframe")) {
               video.removeAttr("height").removeAttr("width")

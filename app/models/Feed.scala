@@ -8,13 +8,18 @@ import play.api.db._
 import play.api.Play.current
 import scala.language.postfixOps
 
+abstract class FeedKind { val name: String }
+case object FeedAtom extends FeedKind { val name: String = "atom" }
+case object FeedRss  extends FeedKind { val name: String = "rss" }
+
 case class Feed(
   id:   Pk[Long],
   name: String,
   site: String,
   url:  String,
   favicon: Option[String],
-  lastUpdate: Option[Date]) {
+  lastUpdate: Option[Date],
+  kind: FeedKind) {
 
   var unread: Long = 0
 
@@ -34,8 +39,13 @@ object Feed {
     get[String]("feed.site") ~
     get[String]("feed.url") ~
     get[Option[String]]("feed.favicon") ~
-    get[Option[Date]]("feed.last_update") map {
-        case id ~ name ~ site ~ url ~ favicon ~ last_update => Feed(id, name, site, url, favicon, last_update)
+    get[Option[Date]]("feed.last_update") ~
+    get[String]("feed.kind") map {
+        case id ~ name ~ site ~ url ~ favicon ~ last_update ~ kind =>
+          kind match {
+            case "rss"  => Feed(id, name, site, url, favicon, last_update, FeedRss)
+            case "atom" => Feed(id, name, site, url, favicon, last_update, FeedAtom)
+          }
       }
   }
 
@@ -122,15 +132,16 @@ object Feed {
       val id: Option[Long] = try {
         SQL("""
             insert into feed
-            (id, name, site, url, favicon)
+            (id, name, site, url, favicon, kind)
             values
-            ({id}, {name}, {site}, {url}, {favicon})
+            ({id}, {name}, {site}, {url}, {favicon}, {kind})
           """).on(
           'id      -> feed.id,
           'name    -> feed.name,
           'site    -> feed.site,
           'url     -> feed.url,
-          'favicon -> feed.favicon
+          'favicon -> feed.favicon,
+          'kind    -> feed.kind.name
         ).executeInsert()
       } catch {
         case e: MySQLIntegrityConstraintViolationException => Option(this.getByUrl(feed.url).get.id.get)

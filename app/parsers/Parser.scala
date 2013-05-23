@@ -9,7 +9,9 @@ trait Parser {
   def dateFormat = "EEE, d MMM yyyy HH:mm:ss z"
   def encoding   = "UTF-8"
 
-  def getDate(item: Node): Option[Date]
+  def hasFullContent = true
+
+  def getDate(dateRaw: String): Option[Date]
   def getContent(item: Node, page: Document): String
 
 }

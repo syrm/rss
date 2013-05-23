@@ -38,9 +38,26 @@ object Settings extends Controller with AuthElement with AuthConfig {
         {
           case url => {
             try {
-              val rss   = XML2.load(url)
-              val name = (rss \ "channel" \ "title").text
-              val site  = (rss \ "channel" \ "link").text
+              val xmlFeed = XML2.load(url)
+
+              // atom feed
+              val feedKind = if ((xmlFeed \ "channel").length == 0) {
+                FeedAtom
+              } else { // rss feed
+                FeedRss
+              }
+
+              val name = if (feedKind == FeedAtom) {
+                  (xmlFeed \ "title").text
+                } else {
+                  (xmlFeed \ "channel" \ "title").text
+                }
+              val site = if (feedKind == FeedAtom) {
+                  (xmlFeed \ "link").text
+                } else {
+                  (xmlFeed \ "channel" \ "link").text
+                }
+
               val favicon = (if (site != "") {
                   try {
                     val page = Jsoup.connect(site).header("User-Agent", "Mozilla/5.0").get()
@@ -77,10 +94,10 @@ object Settings extends Controller with AuthElement with AuthConfig {
                   }
                 }
 
-              val feed = Feed.create(new Feed(NotAssigned, name, site, url, favicon, None))
+              val feed = Feed.create(new Feed(NotAssigned, name, site, url, favicon, None, feedKind))
               Subscription.create(new Subscription(user.id.get, feed.id.get, new Date()))
 
-              Redirect(routes.Settings.feed).flashing("success" -> "Feed will be available within 15 minutes.")
+              Redirect(routes.Settings.feed).flashing("success" -> "Feed will be available within few minutes.")
             } catch {
               case e: Throwable => {
                 println("Error (" + e.getClass +") settings.feedNew " + url)
