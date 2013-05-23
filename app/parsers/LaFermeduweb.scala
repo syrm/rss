@@ -6,6 +6,8 @@ import scala.xml.Node
 
 class LaFermeduweb extends Default {
 
+  override def hasFullContent = true
+
   override def getContent(item: Node, page: Document) = {
     val site = (item \ "guid").text.split("/")(2)
 

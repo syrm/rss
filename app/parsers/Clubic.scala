@@ -7,6 +7,7 @@ import scala.xml.Node
 
 class Clubic extends Default {
 
+  override def hasFullContent = true
   override def encoding   = "ISO-8859-1"
 
   override def getContent(item: Node, page: Document) = {

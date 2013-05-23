@@ -6,6 +6,7 @@ import scala.collection.JavaConversions._
 
 class Korben extends Default {
 
+  override def hasFullContent = true
   override def dateFormat = "EEE, d MMM yyyy HH:mm:ss Z"
 
   override def getContent(item: Node, page: Document) = {

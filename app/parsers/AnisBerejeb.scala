@@ -7,6 +7,8 @@ import scala.xml.Node
 
 class AnisBerejeb extends Default {
 
+  override def hasFullContent = true
+
   override def getContent(item: Node, page: Document) = {
     page.select(".post-content").first() match {
       case content: Element => content.html()

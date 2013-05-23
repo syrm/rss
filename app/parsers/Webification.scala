@@ -5,6 +5,8 @@ import scala.xml.Node
 
 class Webification extends Default {
 
+  override def hasFullContent = true
+
   override def getContent(item: Node, page: Document) = {
     page.select("div.entry").first() match {
       case content: Element => {

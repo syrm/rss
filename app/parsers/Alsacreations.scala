@@ -8,6 +8,7 @@ import scala.xml.Node
 
 class Alsacreations extends Default {
 
+  override def hasFullContent = true
   override def dateFormat = "yyyy-mm-dd'T'HH:mm:ssz"
 
   override def getDate(dateRaw: String): Option[Date] = {

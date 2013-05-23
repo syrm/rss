@@ -5,6 +5,8 @@ import scala.xml.Node
 
 class WebAppers extends Default {
 
+  override def hasFullContent = true
+
   override def getContent(item: Node, page: Document) = {
     page.select("div.post_content").first() match {
       case content: Element => {
