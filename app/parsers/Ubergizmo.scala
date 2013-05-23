@@ -12,7 +12,6 @@ import scala.xml.Node
 class Ubergizmo extends Default {
 
   override def hasFullContent = true
-  override def dateFormat = "d MMM yyyy HH:mm:ss Z"
 
   override def getContent(item: Node, page: Document) = {
     val video = page.select(".youtube_subscription_link").first() match {

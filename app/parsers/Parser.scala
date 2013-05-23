@@ -6,7 +6,6 @@ import scala.xml.Node
 
 trait Parser {
 
-  def dateFormat = "EEE, d MMM yyyy HH:mm:ss z"
   def encoding   = "UTF-8"
 
   def hasFullContent = true

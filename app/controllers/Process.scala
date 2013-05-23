@@ -4,7 +4,6 @@ import anorm._
 import java.net._
 import java.util.Date
 import java.util.Locale
-import java.text.SimpleDateFormat
 import org.jsoup.HttpStatusException
 import org.jsoup.Jsoup
 import org.jsoup.safety.Whitelist
@@ -62,8 +61,6 @@ object Process extends Controller {
       val src = scala.io.Source.fromURL(feed.url)
       val rss = scala.xml.parsing.ConstructingParser.fromSource(src, false).document()
       val parser = Parser(feed.name)
-
-      val simpleDateFormat = new SimpleDateFormat(parser.dateFormat, Locale.US)
 
       val idNode = if (feed.kind == FeedRss) {
           "guid"
