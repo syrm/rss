@@ -4,11 +4,13 @@ import anorm._
 import java.net._
 import java.util.Date
 import java.util.Locale
+import java.text.SimpleDateFormat
 import org.jsoup.HttpStatusException
 import org.jsoup.Jsoup
 import org.jsoup.safety.Whitelist
 import play.api._
 import play.api.mvc._
+import play.libs.Akka._
 import scala.collection.JavaConversions._
 
 import models._
@@ -28,16 +30,20 @@ object Process extends Controller {
   }
 
   def index = LocalAction { request =>
+    var nbFeed: Int = 0
     var newArticle: Int = 0
 
     val feeds = Feed.getAll
+    val from = System.nanoTime()
 
     for (feed <- feeds) {
-      print(feed)
-      newArticle += process(feed)
+      nbFeed = nbFeed+1
+      process(feed)
     }
 
-    println("-")
+    val end = System.nanoTime()
+    val date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
+    Logger.info(date + "\t" + ((end - from)/1000000000) + " sec\t" + nbFeed + " feeds\t" + newArticle + " items")
 
     Ok(newArticle + " nouveaux articles")
   }
@@ -91,8 +97,15 @@ object Process extends Controller {
         val url   = if (feed.kind == FeedRss) {
             (item \ "link").text
           } else {
-            (item \ "link" \ "@href").text
+            val node = item \ "link"
+
+            if (node.length > 0) {
+              (node(0) \ "@href").text
+            } else {
+              ""
+            }
           }
+
         val guid  = (item \ idNode).text
 
         val itemDb = Item.getByGuidForFeed(feed.id.get, guid)
@@ -136,18 +149,19 @@ object Process extends Controller {
             val content = Jsoup.clean(preContent.html(), javaUrl.getProtocol() + "://" + javaUrl.getHost(), whitelist).replaceAll("<([^> ]+)( class=[^>]+)?>[\r\n\t ]*</\\1>", "")
             Item.createOrUpdate(new Item(NotAssigned, title, url, content, date, feed.id.get, guid))
           } catch {
-            case e: HttpStatusException => println("Error (" + e.getStatusCode() + ") " + e.getUrl())
-            case e: Throwable => println("Error (" + e.getClass +") " + url)
+            case e: HttpStatusException => Logger.error("HttpStatusException\t" + feed.id + "\t" + e.getStatusCode() + "\t" + url)
+            case e: Throwable => {
+              Logger.error("Throwable\t" + feed.id + "\t" + e.getClass +"\t" + url)
+              Logger.error("\t" + item)
+            }
           }
         }
       }
 
-      println("")
       Feed.updateLastUpdate(feed.id.get)
     } catch {
       case e: Throwable => {
         Feed.updateLastError(feed.id.get, e.toString())
-        println(": KO")
       }
     }
 
