@@ -38,7 +38,7 @@ object Process extends Controller {
 
     for (feed <- feeds) {
       nbFeed = nbFeed+1
-      process(feed)
+      newArticle += process(feed)
     }
 
     val end = System.nanoTime()
