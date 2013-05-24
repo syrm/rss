@@ -36,10 +36,10 @@ object Process extends Controller {
     val feeds = Feed.getAll
     val from = System.nanoTime()
 
-    for (feed <- feeds) {
-      nbFeed = nbFeed+1
+    feeds.par.map(feed => {
+      nbFeed += 1
       newArticle += process(feed)
-    }
+    })
 
     val end = System.nanoTime()
     val date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
