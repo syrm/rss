@@ -30,20 +30,7 @@ object Process extends Controller {
   }
 
   def index = LocalAction { request =>
-    var nbFeed: Int = 0
-    var newArticle: Int = 0
-
-    val feeds = Feed.getAll
-    val from = System.nanoTime()
-
-    feeds.par.map(feed => {
-      nbFeed += 1
-      newArticle += process(feed)
-    })
-
-    val end = System.nanoTime()
-    val date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
-    Logger.info(date + "\t" + ((end - from)/1000000000) + " sec\t" + nbFeed + " feeds\t" + newArticle + " items")
+    val newArticle = all
 
     Ok(newArticle + " nouveaux articles")
   }
@@ -57,6 +44,25 @@ object Process extends Controller {
       case None => Ok("Feed not found")
       case Some(feed: Feed) => Ok(process(feed, true) + " refresh articles")
     }
+  }
+
+
+  def all = {
+    var nbFeed: Int = 0
+    var newArticle: Int = 0
+    val date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
+    val feeds = Feed.getAll
+    val from = System.nanoTime()
+
+    feeds.par.map(feed => {
+      nbFeed += 1
+      newArticle += process(feed)
+    })
+
+    val end = System.nanoTime()
+    Logger.info(date + "\t" + ((end - from)/1000000000) + " sec\t" + nbFeed + " feeds\t" + newArticle + " items")
+
+    newArticle
   }
 
 
