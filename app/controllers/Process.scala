@@ -48,16 +48,12 @@ object Process extends Controller {
 
 
   def all = {
-    var nbFeed: Int = 0
-    var newArticle: Int = 0
     val date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
     val feeds = Feed.getAll
     val from = System.nanoTime()
 
-    feeds.par.map(feed => {
-      nbFeed += 1
-      newArticle += process(feed)
-    })
+    val nbFeed = feeds.length
+    val newArticle = feeds.par.map(process(_)).fold(0)(_+_)
 
     val end = System.nanoTime()
     Logger.info(date + "\t" + ((end - from)/1000000000) + " sec\t" + nbFeed + " feeds\t" + newArticle + " items")
