@@ -77,11 +77,11 @@ object Settings extends Controller with AuthElement with AuthConfig {
                     }
                   } catch {
                     case e: HttpStatusException => {
-                      println("Error (" + e.getStatusCode() + ") settings.feedNew " + e.getUrl())
+                      Logger.error("HttpStatusException\tsettings.feedNew\t" + e.getStatusCode() + "\t" + url)
                       None
                     }
                     case e: Throwable => {
-                      println("Error (" + e.getClass +") settings.feedNew " + url)
+                      Logger.error("Throwable\tsettings.feedNew\t" + e.getClass +"\t" + url)
                       None
                     }
                   }
@@ -106,7 +106,7 @@ object Settings extends Controller with AuthElement with AuthConfig {
               Redirect(routes.Settings.feed).flashing("success" -> "Feed will be available within few minutes.")
             } catch {
               case e: Throwable => {
-                println("Error (" + e.getClass +") settings.feedNew " + url)
+                Logger.error("Throwable\tsettings.feedNew\t" + e.getClass +"\t" + url)
                 Redirect(routes.Settings.feed).flashing("error" -> "Feed invalid.")
               }
             }
