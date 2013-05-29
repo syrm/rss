@@ -11,16 +11,30 @@ class Clubic extends Default {
   override def encoding   = "ISO-8859-1"
 
   override def getContent(item: Node, page: Document) = {
-    val result = (item \ "link").text.split("/")(3) match {
-      case "video"       => parseVideo(item, page)
-      case "diaporama"   => parseDiaporama(item, page)
-      case uri if uri.matches("^telecharger-.*") => parseTelecharger(item, page)
-      case _             => parseArticle(item, page)
+    val link = (item \ "link").text
+    val result = "^https?://pro".r findFirstIn link match {
+      case Some(a) => parsePro(item, page)
+      case None => {
+        link.split("/")(3) match {
+          case "video"       => parseVideo(item, page)
+          case "diaporama"   => parseDiaporama(item, page)
+          case uri if uri.matches("^telecharger-.*") => parseTelecharger(item, page)
+          case _             => parseArticle(item, page)
+        }
+      }
     }
 
     result match {
       case "" => (item \ "description").text
       case result => result
+    }
+  }
+
+
+  def parsePro(item: Node, page: Document) = {
+    page.select("article").first() match {
+      case content: Element => processVideo(content).html()
+      case null => ""
     }
   }
 
