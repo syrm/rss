@@ -141,7 +141,11 @@ object Process extends Controller {
             }
 
             for (element <- preContent.select("iframe")) {
-              val host = new URL(element.attr("src")).getHost()
+              val src = "^//".r findFirstIn element.attr("src") match {
+                case None => element.attr("src")
+                case Some(_) => "http:" + element.attr("src")
+              }
+              val host = new URL(src).getHost()
               if (host != "www.youtube.com" && host != "www.youtube-nocookie.com" && host != "player.vimeo.com") {
                 element.remove()
               }
