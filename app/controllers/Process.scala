@@ -66,8 +66,12 @@ object Process extends Controller {
     var newArticle = 0
 
     try {
-      val src = scala.io.Source.fromURL(feed.url)
-      val rss = scala.xml.parsing.ConstructingParser.fromSource(src, false).document()
+      val url = new URL(feed.url)
+      val urlCon = url.openConnection()
+      urlCon.setConnectTimeout(10000)
+      urlCon.setReadTimeout(30000)
+      val src = scala.io.Source.fromInputStream(urlCon.getInputStream).getLines.mkString("\n")
+      val rss = scala.xml.XML.loadString(src)
       val parser = Parser(feed.name)
 
       val idNode = if (feed.kind == FeedRss) {
@@ -128,7 +132,7 @@ object Process extends Controller {
 
           try {
             val preContent = if (parser.hasFullContent) {
-                val page = Jsoup.connect(url).header("User-Agent", "Mozilla/5.0").get()
+                val page = Jsoup.connect(url).timeout(30000).header("User-Agent", "Mozilla/5.0").get()
                 Jsoup.parse(parser.getContent(item, page))
               } else {
                 Jsoup.parse((item \ contentNode).text)
