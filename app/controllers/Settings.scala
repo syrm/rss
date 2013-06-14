@@ -11,6 +11,7 @@ import play.api._
 import play.api.data._
 import play.api.data.Forms._
 import play.api.data.validation.Constraints._
+import play.api.libs.Files
 import play.api.mvc._
 import scala.xml.{XML => XML2}
 
@@ -37,78 +38,10 @@ object Settings extends Controller with AuthElement with AuthConfig {
         formWithErrors => Redirect(routes.Settings.feed),
         {
           case url => {
-            try {
-              val xmlFeed = XML2.load(url)
-
-              // atom feed
-              val feedKind = if ((xmlFeed \ "channel").length == 0) {
-                FeedAtom
-              } else { // rss feed
-                FeedRss
-              }
-
-              val name = if (feedKind == FeedAtom) {
-                  (xmlFeed \ "title").text
-                } else {
-                  (xmlFeed \ "channel" \ "title").text
-                }
-              val site = if (feedKind == FeedAtom) {
-                  val node = xmlFeed \ "link"
-
-                  if (node.length > 0) {
-                    (node(0) \ "@href").text
-                  } else {
-                    ""
-                  }
-                } else {
-                  (xmlFeed \ "channel" \ "link").text
-                }
-
-              val favicon = (if (site != "") {
-                  try {
-                    val page = Jsoup.connect(site).header("User-Agent", "Mozilla/5.0").get()
-                    page.select("link[rel^=shortcut]").first() match {
-                      case null => Option(site + "/favicon.ico")
-                      case shortcut => if (shortcut.attr("href").matches("^/.+") == true) {
-                          Option(site + shortcut.attr("href"))
-                        } else {
-                          Option(shortcut.attr("href"))
-                        }
-                    }
-                  } catch {
-                    case e: HttpStatusException => {
-                      Logger.error("HttpStatusException\tsettings.feedNew\t" + e.getStatusCode() + "\t" + url)
-                      None
-                    }
-                    case e: Throwable => {
-                      Logger.error("Throwable\tsettings.feedNew\t" + e.getClass +"\t" + url)
-                      None
-                    }
-                  }
-                } else {
-                  None
-                }) match {
-                  case None => None
-                  case Some(favicon) => {
-                    val result = new URL(favicon).openConnection().asInstanceOf[HttpURLConnection].getResponseCode()
-
-                    if (result == 200) {
-                      Option(favicon)
-                    } else {
-                      None
-                    }
-                  }
-                }
-
-              val feed = Feed.create(new Feed(NotAssigned, name, site, url, favicon, None, feedKind))
-              Subscription.create(new Subscription(user.id.get, feed.id.get, new Date()))
-
+            if (addFeed(user, url) == true) {
               Redirect(routes.Settings.feed).flashing("success" -> "Feed will be available within few minutes.")
-            } catch {
-              case e: Throwable => {
-                Logger.error("Throwable\tsettings.feedNew\t" + e.getClass +"\t" + url)
-                Redirect(routes.Settings.feed).flashing("error" -> "Feed invalid.")
-              }
+            } else {
+              Redirect(routes.Settings.feed).flashing("error" -> "Feed invalid.")
             }
           }
         }
@@ -123,6 +56,102 @@ object Settings extends Controller with AuthElement with AuthConfig {
       }
 
       Redirect(routes.Settings.feed)
+  }
+
+  def feedImport = authorizedAction(parse.multipartFormData, NormalUser) { user =>
+    implicit request =>
+
+      request.body.file("opml").map { opml =>
+        scala.concurrent.future {
+          val xml = XML2.loadString(Files.readFile(opml.ref.file))
+
+          for (item <- xml \\ "outline") {
+            addFeed(user, (item \ "@xmlUrl").text)
+          }
+        }
+      }.getOrElse {
+        Redirect(routes.Application.index).flashing(
+          "error" -> "Missing file"
+        )
+      }
+
+      Redirect(routes.Settings.feed).flashing("success" -> "Feeds currently imported.")
+  }
+
+  def addFeed(user: User, url: String): Boolean = {
+    try {
+      val xmlFeed = XML2.load(url)
+
+      // atom feed
+      val feedKind = if ((xmlFeed \ "channel").length == 0) {
+        FeedAtom
+      } else { // rss feed
+        FeedRss
+      }
+
+      val name = if (feedKind == FeedAtom) {
+          (xmlFeed \ "title").text
+        } else {
+          (xmlFeed \ "channel" \ "title").text
+        }
+      val site = if (feedKind == FeedAtom) {
+          val node = xmlFeed \ "link"
+
+          if (node.length > 0) {
+            (node(0) \ "@href").text
+          } else {
+            ""
+          }
+        } else {
+          (xmlFeed \ "channel" \ "link").text
+        }
+
+      val favicon = (if (site != "") {
+          try {
+            val page = Jsoup.connect(site).header("User-Agent", "Mozilla/5.0").get()
+            page.select("link[rel^=shortcut]").first() match {
+              case null => Option(site + "/favicon.ico")
+              case shortcut => if (shortcut.attr("href").matches("^/.+") == true) {
+                  Option(site + shortcut.attr("href"))
+                } else {
+                  Option(shortcut.attr("href"))
+                }
+            }
+          } catch {
+            case e: HttpStatusException => {
+              Logger.error("HttpStatusException\tsettings.feedNew\t" + e.getStatusCode() + "\t" + url)
+              None
+            }
+            case e: Throwable => {
+              Logger.error("Throwable\tsettings.feedNew\t" + e.getClass +"\t" + url)
+              None
+            }
+          }
+        } else {
+          None
+        }) match {
+          case None => None
+          case Some(favicon) => {
+            val result = new URL(favicon).openConnection().asInstanceOf[HttpURLConnection].getResponseCode()
+
+            if (result == 200) {
+              Option(favicon)
+            } else {
+              None
+            }
+          }
+        }
+
+      val feed = Feed.create(new Feed(NotAssigned, name, site, url, favicon, None, feedKind))
+      Subscription.create(new Subscription(user.id.get, feed.id.get, new Date()))
+
+      true
+    } catch {
+      case e: Throwable => {
+        Logger.error("Throwable\tsettings.addFeed\t" + e.getClass +"\t" + url)
+        false
+      }
+    }
   }
 
 }

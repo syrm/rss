@@ -18,11 +18,13 @@ jQuery ->
 
   # Mark read first item when tab is visible
   if (document[document.visibilityState] == "visible" && $(".items li").eq(0).hasClass("read") == false)
-    $.get '/item/' + $(".items li").eq(0).attr('id').replace('item_', '')
+    if $(".items li").length > 0
+      $.get '/item/' + $(".items li").eq(0).attr('id').replace('item_', '')
 
   $(document).on document.visibilityChange, (event)->
     if (document[document.visibilityState] == "visible" && $(".items li").eq(0).hasClass("read") == false)
-      $.get '/item/' + $(".items li").eq(0).attr('id').replace('item_', '')
+      if $(".items li").length > 0
+        $.get '/item/' + $(".items li").eq(0).attr('id').replace('item_', '')
 
   window.switchStar = (element)->
     if $(element).hasClass('icon-star-empty')

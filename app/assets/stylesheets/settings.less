@@ -6,14 +6,20 @@ section.settings {
         width: 100%;
 
         input {
-            height: 24px;
-            width: 90%;
+            height:  24px;
+            width: 1037px;
         }
 
         button {
             height: 24px;
-            width: 9%;
+            width: 60px;
             line-height: 14px;
+        }
+
+        button.upload {
+            width: 20px;
+            padding-left:   4px;
+            padding-right: 19px;
         }
     }
 
@@ -27,5 +33,17 @@ section.settings {
         td:nth-child(3) {
             text-align: left;
         }
+    }
+}
+
+@media (max-width: 1200px) {
+    section.settings div input {
+        width: 807px;
+    }
+}
+
+@media (max-width: 979px) {
+    section.settings div input {
+        width: 591px;
     }
 }

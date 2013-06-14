@@ -3,6 +3,7 @@
 # ~~~~
 
 GET     /settings                           controllers.Settings.feed
+POST    /settings/feed/import               controllers.Settings.feedImport
 POST    /settings/feed/new                  controllers.Settings.feedNew
 GET     /settings/feed/:id/unsubscribe      controllers.Settings.feedUnsubscribe(id: Long)
 GET     /item/:id                           controllers.ItemController.get(id: Long)

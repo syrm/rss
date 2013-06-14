@@ -4,7 +4,11 @@
     <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/settings.css")">
 }
 
-@layout.main(styles) {
+@scripts = {
+    <script src="@routes.Assets.at("vendor/bootstrap.file-input.js")" type="text/javascript"></script>
+}
+
+@layout.main(styles, scripts) {
 <section class="span12 settings">
     @flash.get("success").map { msg =>
         <p class="text-success">@msg</p>
@@ -17,6 +21,7 @@
         <div>
             <input type="text" id="url" name="url" value="@form("url").value" maxlength="255" placeholder="Feed">
             <button type="submit" class="btn btn-success">Add</button>
+            <button type="button" class="btn btn-success upload" data-toggle="modal" data-target="#upload"><i class="icon-upload-alt"></i></button>
         </div>
     </form>
 
@@ -46,4 +51,21 @@
         </tbody>
     </table>
 </section>
+
+<div id="upload" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <form action="/settings/feed/import" method="post" enctype="multipart/form-data">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3 id="myModalLabel">Import OPML file</h3>
+    </div>
+    <div class="modal-body">
+        <input name="opml" type="file" title="Choose your OPML file" />
+    </div>
+    <div class="modal-footer">
+        <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+        <button class="btn btn-success">Upload</button>
+    </div>
+    </form>
+</div>
+
 }
