@@ -11,6 +11,7 @@ class Default extends Parser {
   val formats = Seq(
       "EEE, d MMM yyyy HH:mm:ss z",
       "yyyy-mm-dd'T'HH:mm:ssz",
+      "yyyy-mm-dd'T'HH:mm:ss.SSSz",
       "EEE, d MMM yyyy HH:mm:ss Z",
       "d MMM yyyy HH:mm:ss Z",
       "yyyy-mm-dd'T'HH:mm:ss'Z'"
