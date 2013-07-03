@@ -33,6 +33,7 @@ class VincentAbry extends Default {
         content.select("div#wp_rp_first").remove()
         content.select("br:last-of-type").remove()
         content.select("br:last-of-type").remove()
+        content.select("div#cab-author").remove()
         content.html()
       }
       case null => ""
