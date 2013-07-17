@@ -113,6 +113,30 @@ object Item {
     }
   }
 
+
+  /**
+   * Retrieve all searched Item for User.
+   */
+  def searchAllForUser(user: User, term: String): List[(Item, Feed, Option[Read], Option[Bookmark])] = {
+    DB.withConnection { implicit connection =>
+      SQL("""
+            select * from item
+            inner join feed on feed.id = item.feed_id
+            inner join subscription on subscription.feed_id = item.feed_id
+            left join `read` on read.item_id = item.id and read.user_id = {userId}
+            left join bookmark on bookmark.item_id = item.id and bookmark.user_id = {userId}
+            where subscription.user_id = {userId} and
+              (item.url like {term} or
+              item.title like {term} or
+              item.content like {term})
+
+            order by IF(read.item_id IS NULL, 0, 1), item.date desc
+            limit 100
+        """).on('userId -> user.id, 'term -> ("%" + term + "%")).as(Item.withFeedAndReadAndBookmark *)
+    }
+  }
+
+
   /**
    * Retrieve all Item from a Feed for User.
    */

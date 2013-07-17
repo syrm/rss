@@ -22,21 +22,118 @@ strong {
   }
 }
 
-.navbar-fixed-top .navbar-inner {
-  padding-left: 20px;
-  background-image: none;
+@media (max-width: 979px) and (min-width: 768px) {
+  .container, .navbar-static-top .container, .navbar-fixed-top .container, .navbar-fixed-bottom .container {
+    width: 724px !important;
+  }
+}
 
-  a.brand i {
-    color: white;
-    background: #0088cc;
-    border-top: 3px solid #0088cc;
-    border-bottom: 2px solid #0088cc;
-    border-left: 4px solid #0088cc;
-    border-right: 4px solid #0088cc;
+.navbar-fixed-top {
+  box-shadow: 0 1px 10px rgba(0, 0, 0, 0.1);
+  background-color: #fafafa;
+  border-bottom: 1px solid #d4d4d4;
+}
+
+.navbar-fixed-top .navbar-inner {
+  background-image: none;
+  box-shadow: 0 0 0;
+  border: 0;
+  margin-left: auto;
+  margin-right: auto;
+  float: none;
+
+  a.brand {
+    color: #444;
+    background-color: transparent !important;
+
+    i {
+      color: white;
+      background: #0088cc;
+      border-top: 3px solid #0088cc;
+      border-bottom: 2px solid #0088cc;
+      border-left: 4px solid #0088cc;
+      border-right: 4px solid #0088cc;
+      border-radius: 2px;
+      position: relative;
+      top: -1px;
+      margin-right: 5px;
+    }
+  }
+
+  .dropdown-menu {
+    border-radius: 1px;
+    background-clip: border-box;
+
+    li {
+      a {
+        font-weight: inherit;
+      }
+
+      a:hover {
+        color:            #444;
+        background-color: #f6f6f6;
+        background-image: none;
+      }
+    }
+  }
+
+  .dropdown-menu:after {
+    display: none !important;
+  }
+
+  .dropdown-menu:before {
+    display: none !important;
+  }
+
+  ul.auth li.active a {
+    padding: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+    margin: 5px 3px 2px 4px;
     border-radius: 2px;
+  }
+}
+
+.navbar-fixed-top .search {
+  position: relative;
+  margin-top: 6px;
+
+  form {
+    float: left;
     position: relative;
-    top: -1px;
-    margin-right: 5px;
+
+    i {
+      position: absolute;
+      right: 8px;
+      top: 5px;
+      color: #aaa;
+    }
+
+    input {
+      margin: 0;
+      box-shadow: 0 0 0;
+    }
+  }
+
+  .nav {
+    float: right;
+    margin: 0;
+
+    a:focus {
+      outline: 0;
+    }
+
+    a.dropdown-toggle {
+      color: #444;
+      padding: 7px;
+      margin: 0;
+      margin-left: 8px;
+      border-radius: 2px;
+    }
+
+    a.dropdown-toggle:hover {
+      background-color: #e6e6e6 !important;
+    }
   }
 }
 
@@ -61,6 +158,10 @@ form {
     font-size: 16px !important;
     font-weight: 300 !important;
   }
+}
+
+.table th {
+  font-weight: 400;
 }
 
 .register {

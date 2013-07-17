@@ -1,10 +1,10 @@
-@(selection: String, feed: Option[Feed], feeds: Seq[Feed], items: List[(Item, Feed, Option[Read], Option[Bookmark])])(implicit request: play.api.mvc.Request[Any], user: Option[User])
+@(selection: String, feed: Option[Feed], feeds: Seq[Feed], items: List[(Item, Feed, Option[Read], Option[Bookmark])], term: String = "")(implicit request: play.api.mvc.Request[Any], user: Option[User])
 
 @styles = {
     <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/application.css")">
 }
 
-@layout.main(styles) {
+@layout.main(styles, term = term) {
 <aside class="span4">
     <div class="feeds dropdown">
         <a class="dropdown-toggle" data-toggle="dropdown" href="#">
@@ -53,7 +53,7 @@
     }
     </ul>
 </aside>
-<section class="span8 article">
+<section class="offset4 span8 article">
 @if(items.size > 0) {
     @items(0) match {
         case (item, feed, read, bookmark) => {

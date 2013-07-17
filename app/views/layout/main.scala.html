@@ -1,4 +1,4 @@
-@(styles: Html = Html(""), scripts: Html = Html(""))(content: Html)(implicit request: play.api.mvc.Request[Any], user: Option[User] = None)
+@(styles: Html = Html(""), scripts: Html = Html(""), term: String = "")(content: Html)(implicit request: play.api.mvc.Request[Any], user: Option[User] = None)
 <!doctype html>
 <html lang="fr">
     <head>
@@ -15,21 +15,33 @@
     </head>
     <body>
         <div class="navbar navbar-fixed-top">
-            <div class="navbar-inner">
-                <a class="brand" href="@routes.Application.index"><i class="icon-rss"></i>Rss</a>
-                <ul class="nav pull-right">
-                @user match {
-                    case Some(user: User) => {
-                        <li><a class="user" href="@routes.Settings.feed"><strong>@user.name</strong></a></li>
-                        <li><a class="logout" href="@routes.Auth.logout"><i class="icon-off"></i></a></li>
-
-                    }
-                    case None => {
+            <div class="navbar-inner container">
+                @if(user != None) {
+                    <a class="brand" href="@routes.Application.index"><i class="icon-rss"></i>Rss</a>
+                    <div class="pull-right search">
+                        @if(request.uri != "/settings") {
+                        <form method="get" action="/search">
+                            <input name="term" type="text" value="@term" />
+                            <i class="icon-search"></i>
+                        </form>
+                        }
+                        <ul class="nav nav-pills">
+                            <li class="dropdown">
+                                <a class="btn dropdown-toggle" data-toggle="dropdown" href="#"><i class="icon-cogs"></i></a>
+                                <ul class="dropdown-menu pull-right">
+                                    <li><a class="user" href="@routes.Settings.feed">Settings</a></li>
+                                    <li><a class="logout" href="@routes.Auth.logout">Logout</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                } else {
+                    <a class="brand" href="@routes.Application.index"><i class="icon-rss"></i>Rss</a>
+                    <ul class="nav pull-right auth">
                         <li @if(request.uri == "/register") { class="active" }><a href="@routes.Auth.register"><strong>Register</strong></a></li>
                         <li @if(request.uri == "/login") { class="active" }><a href="@routes.Auth.login">Login</a></li>
-                    }
+                    </ul>
                 }
-                </ul>
             </div>
         </div>
 

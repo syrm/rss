@@ -28,6 +28,22 @@ object Application extends Controller with AuthElement with AuthConfig {
   }
 
 
+  def search(term: String) = authorizedAction(NormalUser) { user =>
+    implicit request =>
+
+      implicit val optionalUser = Option(user)
+
+      val feeds = Feed.getAllForUser(user)
+      val items = Item.searchAllForUser(user, term)
+
+      if (feeds.length == 0) {
+        Ok(views.html.application.welcome())
+      } else {
+        Ok(views.html.application.index("all", None, feeds, items, term))
+      }
+  }
+
+
   def feed(id: Long) = authorizedAction(NormalUser) { user =>
     implicit request =>
 

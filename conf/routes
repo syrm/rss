@@ -18,6 +18,7 @@ POST    /login                              controllers.Auth.authenticate
 GET     /logout                             controllers.Auth.logout
 GET     /v1/items.json                      controllers.api.ItemController.get
 GET     /feed/:id                           controllers.Application.feed(id: Long)
+GET     /search                             controllers.Application.search(term: String)
 GET     /starred                            controllers.Application.starred
 GET     /                                   controllers.Application.index
 
