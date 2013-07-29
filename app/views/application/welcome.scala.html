@@ -1,11 +1,6 @@
 @()(implicit request: play.api.mvc.Request[Any], user: Option[User])
 
-@styles = {
-    <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/application.css")">
-    <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/welcome.css")">
-}
-
-@layout.main(styles) {
+@layout.main() {
     <div id="welcome">
         <i class="icon-hand-up"></i>
         <p>Go into your account settings to add a new Feed</p>

@@ -1,14 +1,6 @@
 @(feeds: Seq[Feed], form: Form[(String)])(implicit request: play.api.mvc.Request[Any], user: Option[User], flash: Flash)
 
-@styles = {
-    <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/settings.css")">
-}
-
-@scripts = {
-    <script src="@routes.Assets.at("vendor/bootstrap.file-input.js")" type="text/javascript"></script>
-}
-
-@layout.main(styles, scripts) {
+@layout.main() {
 <section class="span12 settings">
     @flash.get("success").map { msg =>
         <p class="text-success">@msg</p>

@@ -21,5 +21,8 @@ server.pid
 *.iml
 *.eml
 
+node_modules
+public/javascripts
+public/stylesheets
 /conf/application.conf
 /out/

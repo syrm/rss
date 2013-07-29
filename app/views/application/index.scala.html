@@ -1,10 +1,6 @@
 @(selection: String, feed: Option[Feed], feeds: Seq[Feed], items: List[(Item, Feed, Option[Read], Option[Bookmark])], term: String = "")(implicit request: play.api.mvc.Request[Any], user: Option[User])
 
-@styles = {
-    <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/application.css")">
-}
-
-@layout.main(styles, term = term) {
+@layout.main(term = term) {
 <aside class="span4">
     <div class="feeds dropdown">
         <a class="dropdown-toggle" data-toggle="dropdown" href="#">

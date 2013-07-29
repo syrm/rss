@@ -23,4 +23,4 @@ GET     /starred                            controllers.Application.starred
 GET     /                                   controllers.Application.index
 
 # Map static resources from the /public folder to the /assets URL path
-GET     /assets/*file               controllers.Assets.at(path="/public", file)
+GET     /assets/*file               controllers.VersionedAssets.at(file: controllers.VersionedAsset)

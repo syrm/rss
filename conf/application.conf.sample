@@ -49,6 +49,10 @@ db.default.logStatements=true
 # You can disable evolutions if needed
 # evolutionplugin=disabled
 
+# Assets configuration
+# ~~~~~
+assets.defaultCache="max-age=31536000"
+
 # Logger
 # ~~~~~
 # You can also configure logback (http://logback.qos.ch/), by providing a logger.xml file in the conf directory .

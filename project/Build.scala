@@ -21,6 +21,22 @@ object ApplicationBuild extends Build {
   val pbkdf2Project = RootProject(uri("git://github.com/oxman/pbkdf2-scala.git"))
 
   val main = play.Project(appName, appVersion, appDependencies).settings(
+    playOnStarted <+= baseDirectory { root =>
+      (serverAddress: java.net.InetSocketAddress) => { Grunt.process = Some(Process("grunt watch").run) }: Unit
+    },
+
+    playOnStopped += {
+      () => {
+        Grunt.process.map(p => p.destroy())
+        Grunt.process = None
+      }: Unit
+    },
+
+    scalacOptions ++= Seq("-feature")
   ).dependsOn(pbkdf2Project)
 
+}
+
+object Grunt {
+  var process: Option[Process] = None
 }
