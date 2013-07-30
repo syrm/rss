@@ -4,22 +4,27 @@ section.settings {
 
     div {
         width: 100%;
+        display: -webkit-flex;
 
         input {
             height:  24px;
             width: 1037px;
+            -webkit-flex: 1;
+            margin-right: 5px;
         }
 
         button {
             height: 24px;
             width: 60px;
             line-height: 14px;
+            margin-right: 5px;
         }
 
         button.upload {
             width: 20px;
             padding-left:   4px;
             padding-right: 19px;
+            margin-right: 0;
         }
     }
 
@@ -36,14 +41,8 @@ section.settings {
     }
 }
 
-@media (max-width: 1200px) {
-    section.settings div input {
-        width: 807px;
-    }
-}
-
 @media (max-width: 979px) {
-    section.settings div input {
-        width: 591px;
+    section.settings .table th:nth-child(2), .table td:nth-child(2), {
+        display: none;
     }
 }
