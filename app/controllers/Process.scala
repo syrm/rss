@@ -119,7 +119,11 @@ object Process extends Controller {
         if (itemDb == None || force == true) {
           newArticle = newArticle+1
 
-          val date = parser.getDate((item \ dateNode).text)
+          val date = if ((item \ dateNode).text != "") {
+              parser.getDate((item \ dateNode).text)
+            } else {
+              parser.getDate((item \ "date").text)
+            }
 
           val whitelist = Whitelist.basicWithImages()
           whitelist.addAttributes(":all", "width", "height")
