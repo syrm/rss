@@ -21,6 +21,10 @@ object ApplicationBuild extends Build {
   val pbkdf2Project = RootProject(uri("git://github.com/oxman/pbkdf2-scala.git"))
 
   val main = play.Project(appName, appVersion, appDependencies).settings(
+    lessEntryPoints := Nil,
+    coffeescriptEntryPoints := Nil,
+    javascriptEntryPoints := Nil,
+
     playOnStarted <+= baseDirectory { root =>
       (serverAddress: java.net.InetSocketAddress) => { Grunt.process = Some(Process("grunt watch").run) }: Unit
     },
