@@ -94,6 +94,9 @@ jQuery ->
 jQuery.event.special.swipe.settings.threshold = 0.1
 
 $(window).on
+  movestart: (e)->
+    if ((e.distX > e.distY && e.distX < -e.distY) || (e.distX < e.distY && e.distX > -e.distY))
+      e.preventDefault();
   swipeleft: ()->
     if ($(window).width() <= 767)
       item = $('#' + $('h1').attr('id').replace('its_', '')).next()
