@@ -95,12 +95,25 @@ strong {
   }
 }
 
-.navbar-fixed-top .search {
+.navbar-fixed-top .right {
   position: relative;
   margin-top: 6px;
 
-  form {
+  .unread {
+    display: none;
     float: left;
+    margin: 0;
+    margin-right: 10px;
+    line-height: 30px;
+
+    i {
+      margin-left: 2px;
+    }
+  }
+
+  #search {
+    float: left;
+    display: none;
     position: relative;
 
     i {
@@ -114,6 +127,18 @@ strong {
       margin: 0;
       box-shadow: none;
     }
+  }
+
+  a#expandSearch {
+    display: block;
+    margin: 0;
+    margin-left: 8px;
+    border-radius: 2px;
+    padding: 7px;
+    padding-top: 5px;
+    line-height: 14px;
+    height: 30px;
+    float: left;
   }
 
   .nav {

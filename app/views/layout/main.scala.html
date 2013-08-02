@@ -17,12 +17,14 @@
             <div class="navbar-inner container">
                 @if(user != None) {
                     <a class="brand" href="@routes.Application.index"><i class="icon-rss"></i>Rss</a>
-                    <div class="pull-right search">
+                    <div class="pull-right right">
+                        <p class="unread"><span class="number">?</span> <i class="icon-file-text"></i></p>
                         @if(request.uri != "/settings") {
-                        <form method="get" action="/search">
-                            <input name="term" type="text" value="@term" />
+                        <form id="search" method="get" action="/search">
+                            <input id="term" name="term" type="text" value="@term" />
                             <i class="icon-search"></i>
                         </form>
+                        <a class="btn" id="expandSearch" href="#"><i class="icon-search"></i></a>
                         }
                         <ul class="nav nav-pills">
                             <li class="dropdown">

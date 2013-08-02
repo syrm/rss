@@ -47,49 +47,25 @@ jQuery ->
   $('.items').on
     click: (event)->
       if $(event.target).hasClass('item')
-        $('.items').find('.selected').removeClass('selected').addClass('read')
-        $(event.target).addClass('selected')
-        $(':animated').stop()
-        $.get '/item/' + $(event.target).attr('id').replace('item_', ''), null, (data)->
-          if (data.feed.unread == 0)
-            $('#feed_' + data.feed.id + ' .unread').remove()
-          else
-            $('#feed_' + data.feed.id + ' .unread').text(data.feed.unread)
-
-
-          if (data.feed.favicon != null)
-            $('section.article .title .icon').eq(0)
-              .css('background-image', 'url("' + data.feed.favicon + '")')
-              .css('display', 'inline-block')
-          else
-            $('section.article .title .icon').eq(0)
-              .css('display', 'none')
-
-          $('section.article .title a').eq(0)
-            .attr("href", data.item.url)
-            .html(data.item.title)
-
-          $('section.article .info').data('popover').options.content = "<i class='icon-time'></i> " + data.item.date
-
-          if (data.bookmark == true)
-            $('section.article .title .tools .star').eq(0)
-              .attr('href', '/item/' + data.item.id + '/unstar')
-              .find('i').attr('class', 'icon-star')
-          else
-            $('section.article .title .tools .star').eq(0)
-              .attr('href', '/item/' + data.item.id + '/star')
-              .find('i').attr('class', 'icon-star-empty')
-
-          $('section.article .content').html(data.item.content)
-
-          Hyphenator.run()
-
-        $(window).scrollTo 0, 0
+        loadItem($(event.target).attr('id'))
 
   $(document).on 'click', '.star i', (event)->
     event.preventDefault()
     $.get $(event.target).parent().attr('href')
     switchStar(event.target)
+
+$('.unread .number').html($(".item").not(".read").length)
+$('.unread').css('display', 'block')
+
+$('#expandSearch').on 'click', (event)->
+  $('#expandSearch').attr("style", "display: none !important")
+  $('#search').css("display", "block")
+  $('.unread').css('display', 'none')
+
+if ($("#term").val().length > 0)
+  $('#expandSearch').attr("style", "display: none !important")
+  $('#search').css("display", "block")
+  $('.unread').css('display', 'none')
 
 jQuery.event.special.swipe.settings.threshold = 0.1
 
@@ -110,6 +86,8 @@ $(window).on
         loadItem(item.attr("id"))
 
 loadItem = (itemId)->
+  $('.items').find('.selected').removeClass('selected').addClass('read')
+  $('#' + itemId).addClass('selected')
   id = itemId.replace('item_', '')
   $.get '/item/' + id, null, (data)->
     if (data.feed.unread == 0)
@@ -144,6 +122,7 @@ loadItem = (itemId)->
         .find('i').attr('class', 'icon-star-empty')
 
     $('section.article .content').html(data.item.content)
+    $('.unread .number').html($(".item").not(".read").length)
 
     Hyphenator.run()
 
