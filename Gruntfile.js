@@ -15,9 +15,8 @@ module.exports = function(grunt) {
       dist: {
         src: [
           'public/vendor/bootstrap/js/bootstrap.js',
-          'public/vendor/bootstrap.file-input.js',
-          'public/vendor/jquery.scrollTo.js',
           'public/vendor/hyphenator/hyphenator.js',
+          'public/vendor/*.js',
           'assets_tmp/all_coffee.js'
         ],
         dest: 'assets_tmp/all.js'

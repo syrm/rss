@@ -54,7 +54,7 @@
     @items(0) match {
         case (item, feed, read, bookmark) => {
             <div class="title">
-                <h1><div class="icon" style="background-image: url('@feed.favicon')@if(feed.favicon.isEmpty) { ;display:none }"></div> <a href="@item.url">@item.title</a></h1>
+                <h1 id="its_item_@item.id"><div class="icon" style="background-image: url('@feed.favicon')@if(feed.favicon.isEmpty) { ;display:none }"></div> <a href="@item.url">@item.title</a></h1>
                 <div class="tools">
                     @bookmark match {
                         case None => { <a class="star" href="@routes.ItemController.star(item.id.get)"><i class="icon-star-empty"></i></a> }
