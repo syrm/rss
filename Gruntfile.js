@@ -79,7 +79,8 @@ module.exports = function(grunt) {
       scripts: {
         files: [
           'app/assets/javascripts/*.coffee',
-          'app/assets/stylesheets/*.less'
+          'app/assets/stylesheets/*.less',
+          'Gruntfile.js'
         ],
         tasks: ['default']
       }
