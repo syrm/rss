@@ -17,12 +17,12 @@ jQuery ->
 
 
   # Mark read first item when tab is visible
-  if (document[document.visibilityState] == "visible" && $(".items li").eq(0).hasClass("read") == false)
+  if (document[document.visibilityState] == "visible" && $(".items li").eq(0).hasClass("alreadyMarked") == false)
     if $(".items li").length > 0
       $.get '/item/' + $(".items li").eq(0).attr('id').replace('item_', '')
 
   $(document).on document.visibilityChange, (event)->
-    if (document[document.visibilityState] == "visible" && $(".items li").eq(0).hasClass("read") == false)
+    if (document[document.visibilityState] == "visible" && $(".items li").eq(0).hasClass("alreadyMarked") == false)
       if $(".items li").length > 0
         $.get '/item/' + $(".items li").eq(0).attr('id').replace('item_', '')
 
@@ -54,8 +54,9 @@ jQuery ->
     $.get $(event.target).parent().attr('href')
     switchStar(event.target)
 
-$('.unread .number').html($(".item").not(".read").length)
-$('.unread').css('display', 'block')
+if ($(".item").not(".read").length > 0)
+  $('.unread .number').html($(".item").not(".read").length)
+  $('.unread').css('display', 'block')
 
 $('#expandSearch').on 'click', (event)->
   $('#expandSearch').attr("style", "display: none !important")
@@ -86,8 +87,24 @@ $(window).on
         loadItem(item.attr("id"))
 
 loadItem = (itemId)->
-  $('.items').find('.selected').removeClass('selected').addClass('read')
-  $('#' + itemId).addClass('selected')
+  $('.items').find('.selected').removeClass('selected')
+  $('#' + itemId).addClass('selected read')
+
+  $('section.article .title a').eq(0)
+    .attr("href", "#")
+    .html($('#' + itemId).text())
+
+  if ($('#' + itemId + " .icon").attr("style") != undefined)
+    $('section.article .title .icon').eq(0)
+      .attr('style', $('#' + itemId + " .icon").attr("style"))
+      .css('display', 'inline-block')
+  else
+    $('section.article .title .icon').eq(0)
+      .css('display', 'none')
+
+  $('section.article .content').addClass('flexed')
+  $('section.article .content').html($('<i class="icon-spinner icon-spin icon-3x"></i>'))
+
   id = itemId.replace('item_', '')
   $.get '/item/' + id, null, (data)->
     if (data.feed.unread == 0)
@@ -121,8 +138,13 @@ loadItem = (itemId)->
         .attr('href', '/item/' + data.item.id + '/star')
         .find('i').attr('class', 'icon-star-empty')
 
+    $('section.article .content').removeClass('flexed')
     $('section.article .content').html(data.item.content)
-    $('.unread .number').html($(".item").not(".read").length)
+    if ($(".item").not(".read").length > 0)
+      $('.unread').css('display', 'block')
+      $('.unread .number').html($(".item").not(".read").length)
+    else
+      $('.unread').css('display', 'none')
 
     Hyphenator.run()
 
