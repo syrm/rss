@@ -18,14 +18,6 @@
                 @if(user != None) {
                     <a class="brand" href="@routes.Application.index"><i class="icon-rss"></i>Rss</a>
                     <div class="pull-right right">
-                        <p class="unread"><span class="number">?</span> <i class="icon-file-text"></i></p>
-                        @if(request.uri != "/settings") {
-                        <form id="search" method="get" action="/search">
-                            <input id="term" name="term" type="text" value="@term" />
-                            <i class="icon-search"></i>
-                        </form>
-                        <a class="btn" id="expandSearch" href="#"><i class="icon-search"></i></a>
-                        }
                         <ul class="nav nav-pills">
                             <li class="dropdown">
                                 <a class="btn dropdown-toggle" data-toggle="dropdown" href="#"><i class="icon-cogs"></i></a>
@@ -35,6 +27,14 @@
                                 </ul>
                             </li>
                         </ul>
+                        @if(request.uri != "/settings") {
+                        <form id="search" method="get" action="/search">
+                            <input id="term" name="term" type="text" value="@term" />
+                            <i class="icon-search"></i>
+                        </form>
+                        <a class="btn" id="expandSearch" href="#"><i class="icon-search"></i></a>
+                        <p class="unread"><span class="number">?</span> <i class="icon-file-text"></i></p>
+                        }
                     </div>
                 } else {
                     <a class="brand" href="@routes.Application.index"><i class="icon-rss"></i>Rss</a>
