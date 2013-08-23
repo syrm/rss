@@ -10,7 +10,7 @@ class VincentAbry extends Default {
   override def hasFullContent = true
 
   override def getContent(item: Node, page: Document) = {
-    page.select("div.entry").first() match {
+    page.select(".post_text").first() match {
       case content: Element => {
         for(img <- content.select("img")) {
           val src = if (img.hasAttr("pagespeed_high_res_src") == true) {
@@ -23,17 +23,6 @@ class VincentAbry extends Default {
           img.attr("src", src)
         }
 
-        content.select("[class^=pub-]").remove()
-        content.select("div.meta-single").remove()
-        content.select("div#respond ~ iframe").remove()
-        content.select("div#respond").remove()
-        content.select("div#comments").remove()
-        content.select("div.commentlist").remove()
-        content.select("div.navigation").remove()
-        content.select("div#wp_rp_first").remove()
-        content.select("br:last-of-type").remove()
-        content.select("br:last-of-type").remove()
-        content.select("div#cab-author").remove()
         content.html()
       }
       case null => ""
