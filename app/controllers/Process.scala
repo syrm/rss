@@ -124,7 +124,10 @@ object Process extends Controller {
             }
           }
 
-        val guid  = (item \ idNode).text
+        val guid  = (item \ idNode).text match {
+            case "" => url
+            case guid => guid
+          }
 
         val itemDb = Item.getByGuidForFeed(feed.id.get, guid)
 
