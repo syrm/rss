@@ -67,10 +67,16 @@ object Process extends Controller {
 
     try {
       val url = new URL(feed.url)
-      val urlCon = url.openConnection()
+      val urlCon = url.openConnection
       urlCon.setConnectTimeout(10000)
       urlCon.setReadTimeout(30000)
-      val src = scala.io.Source.fromInputStream(urlCon.getInputStream).getLines.mkString("\n")
+
+      val src = try {
+        scala.io.Source.fromInputStream(urlCon.getInputStream)(io.Codec("UTF-8")).getLines.mkString("\n")
+      } catch {
+        case e: Throwable => scala.io.Source.fromInputStream(urlCon.getInputStream)(io.Codec("ISO8859-15")).getLines.mkString("\n")
+      }
+
       val rss = scala.xml.XML.loadString(src)
       val parser = Parser(feed.name)
 
