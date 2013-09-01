@@ -145,7 +145,7 @@ object Process extends Controller {
           whitelist.addAttributes("iframe", "src")
           whitelist.addAttributes("embed", "type", "src", "allowfullscreen", "allowscriptaccess", "flashvars")
           whitelist.addAttributes("param", "name", "value")
-          whitelist.addAttributes("object", "data")
+          whitelist.addAttributes("object", "id", "data", "type")
           whitelist.addAttributes("div", "class")
           whitelist.addTags("div", "iframe", "object", "param", "embed", "section", "aside", "h1", "h2", "h3", "h4", "h5", "h6")
 

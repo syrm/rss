@@ -29,6 +29,8 @@ object Parser {
       case "Vincent Abry"       => new VincentAbry
       case "La Ferme du web"    => new LaFermeduweb
       case "Anis Berejeb"       => new AnisBerejeb
+      case "Le Figaro : A la Une" => new LeFigaro
+      case "Le Figaro : France"   => new LeFigaro
       case _                    => new Default
     }
   }
