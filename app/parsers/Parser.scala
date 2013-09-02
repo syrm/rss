@@ -31,6 +31,9 @@ object Parser {
       case "Anis Berejeb"       => new AnisBerejeb
       case "Le Figaro : A la Une" => new LeFigaro
       case "Le Figaro : France"   => new LeFigaro
+      case "Le Parisien - Hauts-de-Seine" => new LeParisien
+      case "Le Parisien - Paris"          => new LeParisien
+      case "Le Parisien - Faits divers"   => new LeParisien
       case _                    => new Default
     }
   }
