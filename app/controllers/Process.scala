@@ -147,7 +147,7 @@ object Process extends Controller {
           whitelist.addAttributes("param", "name", "value")
           whitelist.addAttributes("object", "id", "data", "type")
           whitelist.addAttributes("div", "class")
-          whitelist.addTags("div", "iframe", "object", "param", "embed", "section", "aside", "h1", "h2", "h3", "h4", "h5", "h6")
+          whitelist.addTags("div", "iframe", "object", "param", "embed", "section", "aside", "h1", "h2", "h3", "h4", "h5", "h6", "pre")
 
           try {
             val preContent = if (parser.hasFullContent) {
