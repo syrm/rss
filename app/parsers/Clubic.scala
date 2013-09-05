@@ -19,6 +19,7 @@ class Clubic extends Default {
           case "video"       => parseVideo(item, page)
           case "diaporama"   => parseDiaporama(item, page)
           case uri if uri.matches("^telecharger-.*") => parseTelecharger(item, page)
+          case "salon-informatique-tic" => parseSalon(item, page)
           case _             => parseArticle(item, page)
         }
       }
@@ -34,6 +35,16 @@ class Clubic extends Default {
   def parsePro(item: Node, page: Document) = {
     page.select("article").first() match {
       case content: Element => processVideo(content).html()
+      case null => ""
+    }
+  }
+
+
+  def parseSalon(item: Node, page: Document) = {
+    page.select("div.fiche .visuel + div").first() match {
+      case content: Element => {
+        processVideo(content).html()
+      }
       case null => ""
     }
   }
