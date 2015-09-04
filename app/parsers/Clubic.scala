@@ -115,7 +115,7 @@ class Clubic extends Default {
 
 
   def parseArticle(item: Node, page: Document) = {
-    page.select("div.editorial").first() match {
+    page.select("div.article-container").first() match {
       case content: Element => {
         processVideo(content).html()
       }

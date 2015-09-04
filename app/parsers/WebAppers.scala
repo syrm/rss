@@ -8,7 +8,7 @@ class WebAppers extends Default {
   override def hasFullContent = true
 
   override def getContent(item: Node, page: Document) = {
-    page.select("div.post_content").first() match {
+    page.select("div.post").first() match {
       case content: Element => {
         content.html()
       }

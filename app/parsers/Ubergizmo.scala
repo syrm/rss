@@ -22,7 +22,7 @@ class Ubergizmo extends Default {
       case null => ""
     }
 
-    val content = page.select(".article").first() match {
+    val content = page.select(".article-content").first() match {
       case content: Element => {
         content.select(".byline_container").remove()
         content.select("p[data-swiftype-index]").remove()
